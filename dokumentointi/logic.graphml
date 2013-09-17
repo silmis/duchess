@@ -246,7 +246,7 @@ sen metodin osalta, joka laskee kyseisen nappulatyypin
 lailliset siirrot. possibleMoves() ottaa huomioon myös
 pelilaudan koon (muuttujat rank ja file voivat saada vain
 arvoja 1-8), muiden nappuloiden sijoittelun ja
-pelihistorian (merkitystä ohestalyönnissä ja
+aiemmat siirrot (merkitystä ohestalyönnissä ja
 tornituksesssa)<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>

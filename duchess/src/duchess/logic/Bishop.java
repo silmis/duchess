@@ -9,8 +9,8 @@ package duchess.logic;
  * @author thitkone
  */
 public class Bishop extends Piece {
-    public Bishop(int file, int rank, boolean color) {
-        super(file, rank, color);
+    public Bishop(int file, int rank, boolean color, Game myGame) {
+        super(file, rank, color, myGame);
     }
     public int[][] possibleMoves() {
         return new int[1][1];

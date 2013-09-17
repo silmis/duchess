@@ -65,14 +65,39 @@ public class NewGameTest {
         for(Piece p : pieces) {
             if(p instanceof King) {
                 if (p.getColor() == true) {
-                    assertEquals(p.getPos()[0], 5);
-                    assertEquals(p.getPos()[1], 1);
+                    assertEquals(p.getFile(), 5);
+                    assertEquals(p.getRank(), 1);
                 } else {
-                    assertEquals(p.getPos()[0], 4);
-                    assertEquals(p.getPos()[1], 8);
+                    assertEquals(p.getFile(), 4);
+                    assertEquals(p.getRank(), 8);
                 }
             }
         }
+    }
+    @Test
+    public void isCenterBoardOccupied() {
+       // some files on all ranks, should be false
+       boolean center33 = gm.isOccupied(new int[] {3,3});
+       boolean center64 = gm.isOccupied(new int[] {6,4});
+       boolean center75 = gm.isOccupied(new int[] {7,5});
+       boolean center16 = gm.isOccupied(new int[] {1,6});
+       assertEquals((center33 && center64 && center75 && center16), false);
+    }
+    @Test
+    public void areStartingRanksOccupied() {
+        // some values on ranks 1-2 and 7-8, should all be true
+        boolean start31 = gm.isOccupied(new int[] {3,1});
+        boolean start62 = gm.isOccupied(new int[] {6,2});
+        boolean start77 = gm.isOccupied(new int[] {7,7});
+        boolean start18 = gm.isOccupied(new int[] {1,8});
+        assertEquals((start31 && start62 && start77 && start18), true);
+    }
+    @Test
+    public void isOccupiedOffBoard() {
+        // should be "occupied" if not valid
+        boolean offb1 = gm.isOccupied(new int[] {1,9});
+        boolean offb2 = gm.isOccupied(new int[] {16,20});
+        assertEquals((offb1 && offb2), true);
     }
     /*@Test
     public void () {

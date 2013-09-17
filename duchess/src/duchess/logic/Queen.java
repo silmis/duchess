@@ -9,8 +9,8 @@ package duchess.logic;
  * @author thitkone
  */
 public class Queen extends Piece {
-    public Queen(int file, int rank, boolean color) {
-        super(file, rank, color);
+    public Queen(int file, int rank, boolean color, Game myGame) {
+        super(file, rank, color, myGame);
     }
     public int[][] possibleMoves() {
         return new int[1][1];
