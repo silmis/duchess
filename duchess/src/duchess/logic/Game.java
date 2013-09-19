@@ -55,58 +55,81 @@ public class Game {
         this.pieces.add(new King(5,1,true, this));
         this.pieces.add(new King(4,8,false, this));
     }
-    public boolean isValidSquare(int[] square) {
+    public boolean isValidSquare(Square s) {
         // square is not within board limits
-        if (((square[0] > 8) || (square[1] > 8)) ||
-            ((square[0] < 1) || (square[1] < 1)) ) { 
+        if (((s.fl() > 8) || (s.rk() > 8)) ||
+            ((s.fl() < 1) || (s.rk() < 1)) ) { 
             return false; 
         }
         return true;
     }
-    // to-do: should return the piece OR I make another method that will
-    public boolean isOccupied(int[] square) {
-        if (this.isValidSquare(square) == false) { 
-            return true; // if square is not valid, it is "occupied" (this sucks)
+    // make sure there can only be one piece at a square (FIX moving!!)
+    public Piece whoIsAt(Square s) {
+        if (this.isValidSquare(s) == false) {
+            return null;
         }
-        boolean fileCheck, rankCheck;
         for(Piece p : this.pieces) {
-            fileCheck = false;
-            rankCheck = false;
-            if(p.file == square[0]) { fileCheck = true; };
-            if(p.rank == square[1]) { rankCheck = true; };
-            if (fileCheck && rankCheck) {
-                return true;
+            if ((p.file == s.fl()) && (p.rank == s.rk())) {
+                System.out.println("There's a " + p);
+                return p;
             }
         }
-        return false;
+        return null;
     }
-    public boolean move(int pieceIndex, int[] square) {
-        // list all possible moves
-        int[][] possibleMoves = this.possibleMoves(pieceIndex);
-        // none found : don't move
+    public boolean move(int pieceIndex, Square square) {
+        return this.move(this.pieces.get(pieceIndex), square);
+    }
+    public boolean move(Piece p, Square square) {
+        if (p == null) return false;
+        Square[] possibleMoves = this.possibleMoves(p);
         if(possibleMoves.length < 1) { return false; }
-        // if desired move is possible ..
-        for(int[] move : possibleMoves) {
-            if ((square[0] == move[0]) && (square[1] == move[1])) {
-                // move the piece
-                pieces.get(pieceIndex).changePos(move[0], move[1]);
-                // if it takes another, remove it (doesn't work)
-                if (this.isOccupied(move) == true) {
-                    //pieces.remove(pieceIndex);
+        for(Square move : possibleMoves) {
+            if ((square.fl() == move.fl()) && (square.rk() == move.rk())) {
+                // if occupied, take the piece (this is still wrong)
+                Piece toBeTaken = this.whoIsAt(move); 
+                if ((toBeTaken != null) && 
+                    (toBeTaken.getColor() != p.getColor())) {
+                    pieces.remove(toBeTaken);
                 }
+                // move own piece
+                System.out.println("moving " + p + " to " + move);
+                p.changePos(move.fl(), move.rk());
                 this.whitesTurn = !(this.whitesTurn);
                 return true;
             }
         }
         return false;
     }
-    public Piece[] whoCanMoveHere(int[] square) {
+    public Piece[] whoCanMoveHere(Square square) {
         return new Piece[1];
     }
-    public int[][] possibleMoves(int pieceIndex) {
+    public Piece[] listPieces() {
+        return new Piece[1];
+    }
+    public Square[] possibleMoves(int pieceIndex) {
         return pieces.get(pieceIndex).possibleMoves();
     }
-    public int[][] possibleMoves(Piece p) {
-        return p.possibleMoves();
+    // TO-DO
+    public Square[] possibleMoves(Piece p) {
+        try { 
+            return ((Pawn) p).possibleMoves();
+        } catch(ClassCastException e) {}
+        try { 
+            return ((Knight) p).possibleMoves();
+        } catch(ClassCastException e) {}
+        try { 
+            return ((Bishop) p).possibleMoves();
+        } catch(ClassCastException e) {}
+        try { 
+            return ((Rook) p).possibleMoves();
+        } catch(ClassCastException e) {}
+        try { 
+            return ((Queen) p).possibleMoves();
+        } catch(ClassCastException e) {}
+        try { 
+            return ((King) p).possibleMoves();
+        } catch(ClassCastException e) {}
+        
+        return null;
     }
 }

@@ -12,10 +12,8 @@ public class King extends Piece {
     public King(int file, int rank, boolean color, Game myGame) {
         super(file, rank, color, myGame);
     }
-    public int[][] possibleMoves() {
-        int [][] r = new int[1][1];
-        r[0][0] = 2;
-        return r;
+    public Square[] possibleMoves() {
+        return new Square[1];
     }
     
 }

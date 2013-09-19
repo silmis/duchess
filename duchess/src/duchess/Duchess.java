@@ -4,7 +4,7 @@
  */
 package duchess;
 import java.util.Arrays;
-import duchess.logic.Game;
+import duchess.logic.*;
 /**
  *
  * @author thitkone
@@ -16,13 +16,7 @@ public class Duchess {
      */
     public static void main(String[] args) {
         Game b = new Game();
-        System.out.println("white's turn: " + b.isWhitesTurn());
-        System.out.println(b.pieces().toString());
-        /*Pawn p1 = new Pawn(1,2);
-        System.out.println(p1.getPos());
-        p1.changePos(5,6);
-        System.out.println(p1.getPos());
-        System.out.println(p1.possibleMoves()[0]);
-        System.out.println("jejeje");*/
+        boolean white = b.move(b.whoIsAt(new Square(3,2)), new Square(3,4));
+        boolean black = b.move(b.whoIsAt(new Square(1,7)), new Square(1,5));
     }
 }

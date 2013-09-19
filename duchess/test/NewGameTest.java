@@ -46,21 +46,6 @@ public class NewGameTest {
     // The methods must be annotated with annotation @Test. For example:
     //
     @Test
-    public void isWhitesTurn() {
-        boolean whitesTurn = gm.isWhitesTurn();
-        assertEquals(whitesTurn, true);
-    }
-    @Test
-    public void isCheck() {
-        boolean isCheck = gm.isCheck();
-        assertEquals(isCheck, false);
-    }
-    @Test
-    public void isMate() {
-        boolean isMate = gm.isMate();
-        assertEquals(isMate, false);
-    }
-    @Test
     public void kingsAreInPlace() {
         for(Piece p : pieces) {
             if(p instanceof King) {
@@ -77,27 +62,40 @@ public class NewGameTest {
     @Test
     public void isCenterBoardOccupied() {
        // some files on all ranks, should be false
-       boolean center33 = gm.isOccupied(new int[] {3,3});
-       boolean center64 = gm.isOccupied(new int[] {6,4});
-       boolean center75 = gm.isOccupied(new int[] {7,5});
-       boolean center16 = gm.isOccupied(new int[] {1,6});
-       assertEquals((center33 && center64 && center75 && center16), false);
+       Piece center33 = gm.whoIsAt(new Square(3,3));
+       Piece center64 = gm.whoIsAt(new Square(6,4));
+       Piece center75 = gm.whoIsAt(new Square(7,5));
+       Piece center16 = gm.whoIsAt(new Square(1,6));
+       boolean unoccupied = false;
+       if (center33 == null && 
+           center64 == null && 
+           center75 == null && 
+           center16 == null) { unoccupied = true; }
+       assertEquals(unoccupied, true);
     }
     @Test
     public void areStartingRanksOccupied() {
         // some values on ranks 1-2 and 7-8, should all be true
-        boolean start31 = gm.isOccupied(new int[] {3,1});
-        boolean start62 = gm.isOccupied(new int[] {6,2});
-        boolean start77 = gm.isOccupied(new int[] {7,7});
-        boolean start18 = gm.isOccupied(new int[] {1,8});
-        assertEquals((start31 && start62 && start77 && start18), true);
+        Piece start31 = gm.whoIsAt(new Square(3,1));
+        Piece start62 = gm.whoIsAt(new Square(6,2));
+        Piece start77 = gm.whoIsAt(new Square(7,7));
+        Piece start18 = gm.whoIsAt(new Square(1,8));
+        boolean unoccupied = false;
+        if (start31 == null || 
+            start62 == null || 
+            start77 == null || 
+            start18 == null) { unoccupied = true; }
+        assertEquals(unoccupied, false);
     }
     @Test
-    public void isOccupiedOffBoard() {
-        // should be "occupied" if not valid
-        boolean offb1 = gm.isOccupied(new int[] {1,9});
-        boolean offb2 = gm.isOccupied(new int[] {16,20});
-        assertEquals((offb1 && offb2), true);
+    public void whoIsAtOffBoard() {
+        // should be null if not valid
+        Piece offb1 = gm.whoIsAt(new Square(1,9));
+        Piece offb2 = gm.whoIsAt(new Square(16,20));
+        boolean someoneThere = true;
+        if (offb1 == null && 
+            offb2 == null ) { someoneThere = false; }
+        assertEquals(someoneThere, false);
     }
     /*@Test
     public void () {

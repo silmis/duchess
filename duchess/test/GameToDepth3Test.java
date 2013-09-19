@@ -45,9 +45,28 @@ public class GameToDepth3Test {
     //
     @Test
     public void WhiteTakesD5() {
-        boolean w1 = gm.move(8, new int[] {5,4});
-        boolean b1 = gm.move(7, new int[] {4,5});
-        boolean w2 = gm.move(8, new int[] {4,5});
+        Square target = new Square(4,5); 
+        boolean w1 = gm.move(gm.whoIsAt(new Square(5,2)), new Square(5,4));
+        boolean b1 = gm.move(gm.whoIsAt(new Square(4,7)), target);
+        boolean w2 = gm.move(gm.whoIsAt(new Square(5,4)), target);
+        Piece p = gm.whoIsAt(target);
+        assertEquals(p.getColor(), true);
+    }
+    @Test
+    public void OpeningWithHorses() { 
+        boolean w1 = gm.move(gm.whoIsAt(new Square(2,1)), new Square(3,3));
+        boolean b1 = gm.move(gm.whoIsAt(new Square(2,8)), new Square(3,6));
+        boolean w2 = gm.move(gm.whoIsAt(new Square(7,1)), new Square(6,3));
         assertEquals((w1 && b1 && w2), true);
     }
+    @Test
+    public void WhiteKnightTakesE5() {
+        Square target = new Square(5,5); 
+        boolean w1 = gm.move(gm.whoIsAt(new Square(7,1)), new Square(6,3));
+        boolean b1 = gm.move(gm.whoIsAt(new Square(5,7)), target);
+        boolean w2 = gm.move(gm.whoIsAt(new Square(6,3)), target);
+        Piece p = gm.whoIsAt(target);
+        assertEquals(p.getColor(), true);
+    }
+    
 }

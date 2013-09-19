@@ -30,8 +30,8 @@ public abstract class Piece {
         this.rank = rank;    
     }
     // think of better format for representing moves?
-    public int[][] possibleMoves() {
-        return new int[1][1];
+    public Square[] possibleMoves() {
+        return new Square[1];
     }
     protected boolean checkIfMovingPossible() {
         // check if my turn
@@ -42,5 +42,10 @@ public abstract class Piece {
             return true;
         }
         return false;
+    }
+    public String toString() {
+        String s = "piece { white: " + this.color + " at: " + 
+                    this.file + "," + this.rank + " }";
+        return s;
     }
 }
