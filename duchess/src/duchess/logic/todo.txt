@@ -1,0 +1,39 @@
+/* TO-DO :
+ * 
+ * whoCanMoveHere()
+ *      - iterate all pieces(see below), square in possible moves
+ *      - should return all or just white/black?
+ * should color be somehow represented better?
+ *      - split pieces? to find "all white pieces", have to iterate all
+ * moves for rest of the pieces
+ *      - also look at existing ones
+ *      - can be combined? bishop+rook=queen?
+ * moving pieces so that capturing works only on opponents pieces
+ *      - make sure no two pieces have same coordinates
+ * format for listPieces()
+ *      - maybe list white and black separately
+ *      - should be readable to both human and computer?
+ * save game
+ *      - just pickle pieces?
+ *      - when loading positionPieces() gets Piece[] as parameter
+ * history
+ *      - propably pairs of Squares, maybe make a class
+ *      - enough info to reconstruct entire game? should be
+ * messy casting in possibleMoves(Piece p)
+ *      - ask teacher
+ * victory conditions
+ *      - is check && king cant move && it's not possible to resolve check
+ * which piece resolves check? "find square that if blocked
+ *        results in opponent piece not being able to 
+ *        move to king's square"
+ * special moves: en passant
+ *      - if pawn moves FROM rank 7 or 2 TWO steps AND opponent in file+-1 
+ *        and rank 5 or 4, in the next turn opponent has a special legal move...
+ *        (separate for black and white)
+ * special moves: castling
+ *      - if rank 1 or 8 (from king to either rook) is NOT threatened 
+ *        OR occupied AND rook (on that side) and king have NOT previously 
+ *        moved king has a special legal move to file 7 or 3 (2 steps).
+ *        rook moves to file 6 or 4. represented as two successive
+ *        same-colour moves?
+ */

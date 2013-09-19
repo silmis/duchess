@@ -63,7 +63,6 @@ public class Game {
         }
         return true;
     }
-    // make sure there can only be one piece at a square (FIX moving!!)
     public Piece whoIsAt(Square s) {
         if (this.isValidSquare(s) == false) {
             return null;
@@ -85,11 +84,12 @@ public class Game {
         if(possibleMoves.length < 1) { return false; }
         for(Square move : possibleMoves) {
             if ((square.fl() == move.fl()) && (square.rk() == move.rk())) {
-                // if occupied, take the piece (this is still wrong)
-                Piece toBeTaken = this.whoIsAt(move); 
-                if ((toBeTaken != null) && 
-                    (toBeTaken.getColor() != p.getColor())) {
-                    pieces.remove(toBeTaken);
+                // if occupied, capture the piece (this is still wrong)
+                Piece toBeCaptured = this.whoIsAt(move); 
+                if (toBeCaptured != null) {
+                    if(toBeCaptured.getColor() != p.getColor()) {
+                        pieces.remove(toBeCaptured);
+                    }
                 }
                 // move own piece
                 System.out.println("moving " + p + " to " + move);

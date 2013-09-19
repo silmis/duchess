@@ -16,13 +16,12 @@
     <data key="d7"/>
     <node id="n0">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="288.2813824815973" width="295.0" x="540.2372528616025" y="222.50000000000003"/>
+          <y:Geometry height="315.0734120138315" width="324.09233176838814" x="540.2372528616024" y="222.50000000000003"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="45.8056640625" x="124.59716796875" y="3.0">Game<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="45.8056640625" x="139.14333385294407" y="3.0">Game<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -33,27 +32,28 @@
             <y:AttributeLabel>isCheck : boolean
 isMate : boolean
 whitesTurn : boolean
-pieces : Piece[]
-history : Move[]</y:AttributeLabel>
+pieces : ArrayList&lt;Piece&gt;
+history : Square[]</y:AttributeLabel>
             <y:MethodLabel>positionPieces()
 positionPieces( fileName : string )
 saveGame()
 
-pieces() : Piece[]
-possibleMoves(pieceNro : int) : squares : int[][]
-move (piece : Piece, square : int[])
-move (pieceNro : int, square : int[])
-updateHistory (move : Move)
+listPieces() : Piece[]
+possibleMoves(pieceIndex : int) : squares : Square[]
+possibleMoves(piece : Piece) : squares : Square[]
+move (pieceIndex : int, square : Square[])
+move (piece : Piece, square : Square[])
+updateHistory (square1 : Square, square2 : Square)
 checkVictoryConditions()
 
-whoCanMoveHere( int file, int rank ) : Piece[] )</y:MethodLabel>
+whoIsAt(square : Square) : piece : Piece
+whoCanMoveHere( square : Square ) : Piece[] )</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n1">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="115.0" width="196.0" x="881.0" y="222.5"/>
@@ -79,10 +79,9 @@ possibleMoves() : squares[][]
     </node>
     <node id="n2">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="60.0" width="188.0" x="1212.0" y="7.5"/>
+          <y:Geometry height="72.30829420970267" width="188.0" x="1212.0" y="7.5"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="43.56494140625" x="72.217529296875" y="3.0">Pawn<y:LabelModel>
@@ -94,17 +93,17 @@ possibleMoves() : squares[][]
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel/>
-            <y:MethodLabel>possibleMoves() : squares[][]</y:MethodLabel>
+            <y:MethodLabel>possibleMoves() : squares :
+Square[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n3">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="60.0" width="188.0" x="1212.0" y="97.5"/>
+          <y:Geometry height="72.30829420970267" width="188.0" x="1212.0" y="97.50000000000001"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="52.5595703125" x="67.72021484375" y="3.0">Knight<y:LabelModel>
@@ -116,17 +115,17 @@ possibleMoves() : squares[][]
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel/>
-            <y:MethodLabel>possibleMoves() : squares[][]</y:MethodLabel>
+            <y:MethodLabel>possibleMoves() : squares :
+Square[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n4">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="60.0" width="188.0" x="994.0" y="97.5"/>
+          <y:Geometry height="72.30829420970267" width="188.0" x="994.0" y="97.50000000000001"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="53.59423828125" x="67.202880859375" y="3.0">Bishop<y:LabelModel>
@@ -138,17 +137,17 @@ possibleMoves() : squares[][]
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel/>
-            <y:MethodLabel>possibleMoves() : squares[][]</y:MethodLabel>
+            <y:MethodLabel>possibleMoves() : squares :
+Square[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n5">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="60.0" width="188.0" x="776.0" y="97.5"/>
+          <y:Geometry height="72.30829420970267" width="188.0" x="776.0" y="97.50000000000001"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="49.5380859375" x="69.23095703125" y="3.0">Castle<y:LabelModel>
@@ -160,17 +159,17 @@ possibleMoves() : squares[][]
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel/>
-            <y:MethodLabel>possibleMoves() : squares[][]</y:MethodLabel>
+            <y:MethodLabel>possibleMoves() : squares :
+Square[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n6">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="60.0" width="188.0" x="558.0" y="97.5"/>
+          <y:Geometry height="72.30829420970267" width="188.0" x="558.0" y="97.50000000000001"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="51.19482421875" x="68.402587890625" y="3.0">Queen<y:LabelModel>
@@ -182,17 +181,17 @@ possibleMoves() : squares[][]
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel/>
-            <y:MethodLabel>possibleMoves() : squares[][]</y:MethodLabel>
+            <y:MethodLabel>possibleMoves() : squares :
+Square[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n7">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="60.0" width="188.0" x="558.0" y="7.5"/>
+          <y:Geometry height="72.30829420970267" width="188.0" x="558.0" y="7.5"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="37.09033203125" x="75.454833984375" y="3.0">King<y:LabelModel>
@@ -204,16 +203,16 @@ possibleMoves() : squares[][]
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel/>
-            <y:MethodLabel>possibleMoves() : squares[][]</y:MethodLabel>
+            <y:MethodLabel>possibleMoves() : squares :
+Square[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n8">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="163.40139575384433" width="294.9999999999999" x="540.2372528616027" y="538.1660852531121"/>
+          <y:Geometry height="163.40139575384433" width="294.9999999999999" x="540.2372528616027" y="592.935490796142"/>
           <y:Fill color="#99CC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="101.78125" modelName="custom" textColor="#000000" visible="true" width="169.955078125" x="62.5224609375" y="30.810072876922163">GUI ??
@@ -235,10 +234,9 @@ erikseen kokonaisuudesta
     </node>
     <node id="n9">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
-          <y:Geometry height="144.02489871179716" width="388.2302746945695" x="987.5865664864917" y="377.1651937121826"/>
+          <y:Geometry height="144.02489871179716" width="388.2302746945695" x="1013.284592285086" y="409.2136150234742"/>
           <y:Fill color="#33CCCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="101.78125" modelName="custom" textColor="#000000" visible="true" width="344.34765625" x="21.941309222284758" y="21.121824355898582">Luokan Piece alaluokat eroavat toisistaan ainoastaan 
@@ -259,17 +257,62 @@ tornituksesssa)<y:LabelModel>
     </node>
     <node id="n10">
       <data key="d4"/>
+      <data key="d6">
+        <y:UMLNoteNode>
+          <y:Geometry height="163.40139575384433" width="520.5148669796554" x="881.0" y="592.935490796142"/>
+          <y:Fill color="#33CCCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="115.75" modelName="custom" textColor="#000000" visible="true" width="467.869140625" x="26.32286317732769" y="23.825697876922163">Perusajatus: Luodaan "käyttöliittymä" (Game), joka instantioi
+shakkipelin, ja jolta voidaan kysyä mielekkäitä ja tyhjentäviä kysymyksiä,
+kuten "mitkä ovat nappulan x lailliset siirrot?" ja "mikä
+nappula voi siirtää ruutuun x?". Pelia voi pelata suoraan
+Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön.
+Siksi täytyy myös pystyä representoimaan pelitilanne järkevästi (listPieces())
+
+LISÄTTY: metodit kysymykselle "kuka on ruudussa x?" ja nappuloiden listaus<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+        </y:UMLNoteNode>
+      </data>
+    </node>
+    <node id="n11">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60.0" width="100.0" x="1181.7887323943662" y="230.64358372456965"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="55.923828125" x="22.0380859375" y="3.0">Square<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+            <y:AttributeLabel>file : int
+rank : int</y:AttributeLabel>
+            <y:MethodLabel/>
+          </y:UML>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    <node id="n12">
+      <data key="d4"/>
       <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
-          <y:Geometry height="108.63199021081448" width="406.5499955438006" x="881.0000000000001" y="592.935490796142"/>
-          <y:Fill color="#33CCCC" transparent="false"/>
+          <y:Geometry height="66.04381846635368" width="219.7261345852894" x="1181.7887323943662" y="320.6435837245696"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="73.84375" modelName="custom" textColor="#000000" visible="true" width="370.017578125" x="18.266208709400303" y="17.394120105407183">Johtoajatus: Luodaan "käyttöliittymä" (Game), joka instantioi
-shakkipelin, ja jolta voidaan kysyä mielekkäitä kysymyksiä,
-kuten "mitkä ovat nappulan x lailliset siirrot?" ja "mikä
-nappula voi siirtää ruutuun [x,y]?". Pelia voi pelata suoraan
-Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="45.90625" modelName="custom" textColor="#000000" visible="true" width="198.98828125" x="10.3689266676447" y="10.06878423317687">Yhtä ruutua kuvaava apuluokka,
+käytännössä järjestetty pari
+(file, rank)<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -280,10 +323,9 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </node>
     <edge id="e0" source="n2" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="30.0" tx="81.66666666666669" ty="-57.5">
+          <y:Path sx="0.0" sy="36.15414710485133" tx="81.66666666666669" ty="-57.5">
             <y:Point x="1306.0" y="83.69701037210466"/>
             <y:Point x="1445.518514303195" y="83.69701037210466"/>
             <y:Point x="1445.518514303195" y="202.5"/>
@@ -296,10 +338,9 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e1" source="n3" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="30.0" tx="49.0" ty="-57.5">
+          <y:Path sx="0.0" sy="36.15414710485133" tx="49.0" ty="-57.5">
             <y:Point x="1306.0" y="187.5"/>
             <y:Point x="1028.0" y="187.5"/>
           </y:Path>
@@ -310,10 +351,9 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e2" source="n4" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="30.0" tx="16.333333333333343" ty="-57.5">
+          <y:Path sx="0.0" sy="36.15414710485133" tx="16.333333333333343" ty="-57.5">
             <y:Point x="1088.0" y="172.5"/>
             <y:Point x="995.3333333333334" y="172.5"/>
           </y:Path>
@@ -324,10 +364,9 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e3" source="n5" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="30.0" tx="-16.33333333333333" ty="-57.5">
+          <y:Path sx="0.0" sy="36.15414710485133" tx="-16.33333333333333" ty="-57.5">
             <y:Point x="870.0" y="172.5"/>
             <y:Point x="962.6666666666666" y="172.5"/>
           </y:Path>
@@ -338,10 +377,9 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e4" source="n6" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="30.0" tx="-49.0" ty="-57.5">
+          <y:Path sx="0.0" sy="36.15414710485133" tx="-49.0" ty="-57.5">
             <y:Point x="652.0" y="187.5"/>
             <y:Point x="930.0" y="187.5"/>
           </y:Path>
@@ -352,10 +390,9 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e5" source="n7" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="30.0" tx="-81.66666666666667" ty="-57.5">
+          <y:Path sx="0.0" sy="36.15414710485133" tx="-81.66666666666667" ty="-57.5">
             <y:Point x="652.0" y="81.2543809255405"/>
             <y:Point x="509.72151284348865" y="81.2543809255405"/>
             <y:Point x="509.72151284348865" y="202.5"/>
@@ -368,7 +405,6 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e6" source="n8" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -379,7 +415,6 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e7" source="n9" target="n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -390,7 +425,6 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e8" source="n10" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -401,6 +435,16 @@ Game-luokkaa käskyttämällä, joten GUI ei ole välttämätön<y:LabelModel>
       </data>
     </edge>
     <edge id="e9" source="n10" target="n8">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e10" source="n12" target="n11">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
