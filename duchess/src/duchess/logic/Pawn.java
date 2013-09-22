@@ -41,7 +41,7 @@ public class Pawn extends Piece {
         // can't move to square if ...
         for (Square s : initialMoves) {
             // move outside the board
-            if (myGame.isValidSquare(s) == false) {
+            if (s.isValid() == false) {
                 continue;
             // the square is occupied and ahead
             } else if((myGame.whoIsAt(s) != null) && 
@@ -66,7 +66,7 @@ public class Pawn extends Piece {
                 legalMoves.add(s);
             }   
         }
-        System.out.println(legalMoves);
+        //System.out.println(legalMoves);
         Square[] result = legalMoves.toArray(new Square[legalMoves.size()]);
         return result;
     }

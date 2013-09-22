@@ -15,27 +15,27 @@ public class Knight extends Piece {
         super(file, rank, color, myGame);
     }
     public Square[] possibleMoves() {
-        Square[] initialMoves;
+        ArrayList<Square> initialMoves = new ArrayList();
         ArrayList<Square> legalMoves = new ArrayList();
         
-        if(checkIfMovingPossible() == false) {
-            return new Square[] {};
-        }
+        if(checkIfMovingPossible() == false) return new Square[0];
         
-        initialMoves = new Square[] {
-            new Square(this.file+2, this.rank+1),
-            new Square(this.file+1, this.rank+2),
-            new Square(this.file-2, this.rank+1),
-            new Square(this.file-1, this.rank+2),
-            
-            new Square(this.file-2, this.rank-1),
-            new Square(this.file-1, this.rank-2),
-            new Square(this.file+2, this.rank-1),
-            new Square(this.file+1, this.rank-2)
-        };
+        initialMoves.add(new Square(this.file+2, this.rank+1));
+        initialMoves.add(new Square(this.file+1, this.rank+2));
+        initialMoves.add(new Square(this.file-2, this.rank+1));
+        initialMoves.add(new Square(this.file-1, this.rank+2));
+
+        initialMoves.add(new Square(this.file-2, this.rank-1));
+        initialMoves.add(new Square(this.file-1, this.rank-2));
+        initialMoves.add(new Square(this.file+2, this.rank-1));
+        initialMoves.add(new Square(this.file+1, this.rank-2));
         
         for(Square s : initialMoves) {
-            if (myGame.isValidSquare(s) == false) {
+            Piece occupier = myGame.whoIsAt(s);
+            if (s.isValid() == false) {
+                continue;
+            } else if ((occupier != null) && 
+                       (occupier.getColor() == this.color)) {
                 continue;
             } else {
                 legalMoves.add(s);

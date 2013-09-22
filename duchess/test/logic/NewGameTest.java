@@ -1,3 +1,5 @@
+package logic;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -42,9 +44,6 @@ public class NewGameTest {
     @After
     public void tearDown() {
     }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     @Test
     public void kingsAreInPlace() {
         for(Piece p : pieces) {
@@ -97,8 +96,13 @@ public class NewGameTest {
             offb2 == null ) { someoneThere = false; }
         assertEquals(someoneThere, false);
     }
-    /*@Test
-    public void () {
-
-    }*/
+    @Test
+    public void whoCanMoveToC3() {
+        Piece[] pieces = gm.whoCanMoveHere(new Square(3,3));
+        for (Piece p : pieces) {
+            //System.out.println(p);
+        }
+        boolean correctLength = (pieces.length == 2);
+        assertEquals(correctLength, true);
+    }
 }

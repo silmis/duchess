@@ -1,3 +1,5 @@
+package logic;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -17,12 +19,12 @@ import java.util.ArrayList;
  *
  * @author thitkone
  */
-public class firstMovesTest {
+public class MBishopTest {
     
     Game gm;
     ArrayList<Piece> pieces;
     
-    public firstMovesTest() {
+    public MBishopTest() {
     }
     
     @BeforeClass
@@ -35,85 +37,67 @@ public class firstMovesTest {
     
     @Before
     public void setUp() {
-        gm = new Game();
+        
     }
     
     @After
     public void tearDown() {
     }
-    @Test
-    public void whitePawnMove1stepsCorrect() {
-        // for now, we "know" that 0 is a white pawn
-        boolean success = gm.move(0, new Square(1,3));
-        assertEquals(success, true);
-    }
-    @Test
-    public void whitePawnMove2stepsCorrect() {
-        boolean success = gm.move(0, new Square(1,4));
-        assertEquals(success, true);
-    }
-    @Test
-    public void whitePawnMove3stepsIncorrect() {
-        boolean success = gm.move(0, new Square(1,5));
-        assertEquals(success, false);
-    }
-    @Test
-    public void whitePawnMoveBackWardsIncorrect() {
-        boolean success = gm.move(0, new Square(1,1));
-        assertEquals(success, false);
-    }
-    @Test
-    public void whitePawnMoveDiagonallyToUnoccupiedSquare() {
-        boolean success = gm.move(0, new Square(2,3));
-        assertEquals(success, false);
-    }
-    // same for black, white needs to move first
-    @Test
-    public void blackPawnMove1stepsCorrect() {
-        // for now, we "know" that 4 is white and 1 is a black pawn
-        boolean white = gm.move(4, new Square(3,4));
-        boolean black = gm.move(1, new Square(1,6));
-        assertEquals(black, true);
-    }
-    @Test
-    public void blackPawnMove2stepsCorrect() {
-        boolean white = gm.move(4, new Square(3,4));
-        boolean black = gm.move(1, new Square(1,5));
-        assertEquals(black, true);
-    }
-    @Test
-    public void blackPawnMove3stepsIncorrect() {
-        boolean white = gm.move(4, new Square(3,4));
-        boolean black = gm.move(1, new Square(1,4));
-        assertEquals(black, false);
-    }
-    @Test
-    public void blackPawnMoveBackWardsIncorrect() {
-        boolean white = gm.move(4, new Square(3,4));
-        boolean black = gm.move(1, new Square(1,8));
-        assertEquals(black, false);
-    }
-    @Test
-    public void blackPawnMoveDiagonallyToUnoccupiedSquare() {
-        boolean white = gm.move(4, new Square(3,4));
-        boolean black = gm.move(1, new Square(2,6));
-        assertEquals(black, false);
-    }
-    
-    // try to move black before white
-    @Test
-    public void blackPawnMoveFirstIncorrect() {
-        boolean black = gm.move(1, new Square(1,6));
-        assertEquals(black, false);
-    }
-    
-    // knights
     
     @Test
-    public void IllegalKnightMoves() { 
-        boolean w1 = gm.move(gm.whoIsAt(new Square(2,1)), new Square(2,3));
-        boolean b1 = gm.move(gm.whoIsAt(new Square(2,8)), new Square(3,7));
-        boolean w2 = gm.move(gm.whoIsAt(new Square(7,1)), new Square(9,3));
-        assertEquals((w1 || b1 || w2), false);
+    // defeats the purpose of testing, but checked this manually to be true
+    // (writing a function for this is simply too time consuming)
+    public void EmptyBoardListAllMoves() {
+        gm = new Game(0); // no other pieces
+        Square target = new Square(4,5);
+        gm.addPiece("Bishop", target, true);
+        /*System.out.println("EmptyBoardListAllMoves");
+        for (Square move : gm.possibleMoves(gm.whoIsAt(target))) {
+            System.out.println(move);
+        }*/
+    }
+    @Test
+    // same as above, but this time two directions are blocked. pawn at (5,4) 
+    // is white, so that's not a valid move. pawn in (6,7) is black and can 
+    // be captured.
+    public void PathBlockedListAllMoves() {
+        gm = new Game(0);
+        Square target = new Square(4,5);
+        gm.addPiece("Bishop", target, true);
+        gm.addPiece("Pawn", new Square(5,4), true);
+        gm.addPiece("Pawn", new Square(6,7), false);
+        /*System.out.println("PathBlockedListAllMoves");
+        for (Square move : gm.possibleMoves(gm.whoIsAt(target))) {
+            System.out.println(move);
+        }*/
+    }
+    @Test
+    // 
+    public void NewGameBishopCantMove() {
+        gm = new Game();
+        Square[] moves = gm.possibleMoves(gm.whoIsAt(new Square(3,1)));
+        boolean isEmpty = (moves.length == 0);
+        assertEquals(isEmpty, true);
+    }
+    @Test
+    public void bishopsOpenCorrect() {
+        gm = new Game();
+        boolean w1 = gm.move(gm.whoIsAt(new Square(4,2)), new Square(4,3));
+        boolean b1 = gm.move(gm.whoIsAt(new Square(4,7)), new Square(4,5));
+        boolean w2 = gm.move(gm.whoIsAt(new Square(3,1)), new Square(6,4));
+        boolean b2 = gm.move(gm.whoIsAt(new Square(3,8)), new Square(7,4));
+        assertEquals((w1 && b1 && w2 && b2), true);
+    }
+    @Test
+    public void bishopsOpenIncorrect() {
+        // both players try illegal move
+        gm = new Game();
+        boolean w1 = gm.move(gm.whoIsAt(new Square(4,2)), new Square(4,3));
+        boolean b1 = gm.move(gm.whoIsAt(new Square(4,7)), new Square(4,5));
+        boolean w2 = gm.move(gm.whoIsAt(new Square(3,1)), new Square(5,4));
+        boolean w2again = gm.move(gm.whoIsAt(new Square(3,1)), new Square(6,4));
+        boolean b2 = gm.move(gm.whoIsAt(new Square(3,8)), new Square(8,4));
+        boolean b2again = gm.move(gm.whoIsAt(new Square(3,8)), new Square(7,4));
+        assertEquals((w2 && b2), false);
     }
 }

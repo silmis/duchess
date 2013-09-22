@@ -4,6 +4,8 @@
  */
 package duchess.logic;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author thitkone
@@ -13,7 +15,10 @@ public class Bishop extends Piece {
         super(file, rank, color, myGame);
     }
     public Square[] possibleMoves() {
-        return new Square[1];
+        if(checkIfMovingPossible() == false) return new Square[0];
+        ArrayList<Square> moves = this.findDiagonalSquares(8);
+        Square[] result = moves.toArray(new Square[moves.size()]);
+        return result;
     }
     
 }

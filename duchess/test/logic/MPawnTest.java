@@ -1,3 +1,5 @@
+package logic;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -17,12 +19,12 @@ import java.util.ArrayList;
  *
  * @author thitkone
  */
-public class firstMovesTest {
+public class MPawnTest {
     
     Game gm;
     ArrayList<Piece> pieces;
     
-    public firstMovesTest() {
+    public MPawnTest() {
     }
     
     @BeforeClass
@@ -107,13 +109,4 @@ public class firstMovesTest {
         assertEquals(black, false);
     }
     
-    // knights
-    
-    @Test
-    public void IllegalKnightMoves() { 
-        boolean w1 = gm.move(gm.whoIsAt(new Square(2,1)), new Square(2,3));
-        boolean b1 = gm.move(gm.whoIsAt(new Square(2,8)), new Square(3,7));
-        boolean w2 = gm.move(gm.whoIsAt(new Square(7,1)), new Square(9,3));
-        assertEquals((w1 || b1 || w2), false);
-    }
 }

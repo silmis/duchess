@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package duchess.logic;
-
+import java.util.ArrayList;
 /**
  *
  * @author thitkone
@@ -29,10 +29,9 @@ public abstract class Piece {
         this.file = file;
         this.rank = rank;    
     }
-    // think of better format for representing moves?
-    public Square[] possibleMoves() {
-        return new Square[1];
-    }
+
+    public Square[] possibleMoves() { return null; }
+    
     protected boolean checkIfMovingPossible() {
         // check if my turn
         // check if movement possible (isCheck)
@@ -43,9 +42,52 @@ public abstract class Piece {
         }
         return false;
     }
+    protected ArrayList<Square> findConsecutiveSquares(int[][] modifiers, 
+                                                       int length) {
+        // Finds all legal diagonal or orthogonal moves (Bishop, Rook, Queen & 
+        // King). Modifiers is an array of four (x,y) pairs of "weights" 
+        // which enable the same loop to be run for all four directions 
+        // on the board. By choosing the modifiers accordingly, we get 
+        // either diagonal or orthogonal consecutive squares. Length 
+        // determines how many squares are explored at any direction (1 for 
+        // king, 8 to others). If edge of board is encountered, loop 
+        // breaks. If an occupied square is encountered, move is only legal if
+        // the piece occupying it is of opposite color.
+        // Example of modifiers: see findDiagonalMoves() and 
+        // findOrthogonalMoves()
+        ArrayList<Square> moves = new ArrayList();
+        for (int c=0; c<4; c++) {
+            for (int i=1; i<=length; i++) {
+                int f = this.file + modifiers[c][0]*i;
+                int r = this.rank + modifiers[c][1]*i;
+                Square sq = new Square(f, r);
+                if (sq.isValid() == false) break;
+                Piece pieceInTargetSq = myGame.whoIsAt(sq);
+                if ((pieceInTargetSq != null) && 
+                    (pieceInTargetSq.getColor() != this.color)) {
+                    moves.add(sq);
+                    break;
+                } else if (pieceInTargetSq != null) {
+                    break;
+                }
+                moves.add(sq);
+            }
+        }
+        return moves;
+    }
+    protected ArrayList<Square> findDiagonalSquares(int length) {
+        int[][] modifiers = {{1,1},{1,-1},{-1,1},{-1,-1}};
+        return this.findConsecutiveSquares(modifiers, length);
+    }
+    protected ArrayList<Square> findOrthogonalSquares(int length) {
+        int[][] modifiers = {{0,1},{1,0},{0,-1},{-1,0}};
+        return this.findConsecutiveSquares(modifiers, length);
+    }
     public String toString() {
-        String s = "piece { white: " + this.color + " at: " + 
-                    this.file + "," + this.rank + " }";
+        Class myClass = this.getClass();
+        String color = this.color ? "white" : "black";
+        String s = "I am a " + color + " " + myClass  + 
+                   " at (" + this.file + "," + this.rank + ")";
         return s;
     }
 }
