@@ -42,6 +42,9 @@ public class Knight extends Piece {
             }
         }
         
+        if (myGame.isCheck() == true) {
+            legalMoves = this.squaresToResolveCheck(legalMoves);
+        }
         Square[] result = legalMoves.toArray(new Square[legalMoves.size()]);
         return result;
     }

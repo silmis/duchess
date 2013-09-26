@@ -24,6 +24,7 @@ public abstract class Piece {
     public boolean getColor() { return this.color; }
     public int getFile() { return this.file; }
     public int getRank() { return this.rank; }
+    public Square getSquare() { return new Square(this.file, this.rank); }
     
     public void changePos(int file, int rank) {
         this.file = file;
@@ -36,14 +37,14 @@ public abstract class Piece {
         // check if my turn
         // check if movement possible (isCheck)
         // ^ checking needs more thought, this is wrong
-        if( (myGame.isWhitesTurn() == this.color) &&
-            (myGame.isCheck() == false)) {
+        // rethink this
+        if( (myGame.isWhitesTurn() == this.color)) {
             return true;
         }
         return false;
     }
     protected ArrayList<Square> findConsecutiveSquares(int[][] modifiers, 
-                                                       int length) {
+            int length) {
         // Finds all legal diagonal or orthogonal moves (Bishop, Rook, Queen & 
         // King). Modifiers is an array of four (x,y) pairs of "weights" 
         // which enable the same loop to be run for all four directions 
@@ -82,6 +83,31 @@ public abstract class Piece {
     protected ArrayList<Square> findOrthogonalSquares(int length) {
         int[][] modifiers = {{0,1},{1,0},{0,-1},{-1,0}};
         return this.findConsecutiveSquares(modifiers, length);
+    }
+    protected ArrayList<Square> squaresToResolveCheck(ArrayList<Square> moves) {
+        // find square that if blocked results in opponent's piece 
+        // not being able to move to king's square
+        ArrayList<Square> resolvingSquares = new ArrayList();
+        for (Square myMove : moves) {
+            // find the one giving check (there can be only one)
+            Piece threat = null;
+            for (Piece p : myGame.pieces()) {
+                if ((p instanceof King) && (p.getColor() == this.color)) {
+                    threat = myGame.whoCanMoveHere(p.getSquare())[0];
+                }
+            }
+            // intersection of moves by piece giving check and own piece
+            Square[] enemyMoves = threat.possibleMoves();
+            for (Square enemyMove : enemyMoves) {
+                if ((myMove.fl() == enemyMove.fl()) &&
+                    (myMove.rk() == enemyMove.rk())) {
+                    resolvingSquares.add(myMove);
+                }
+            }
+            // lastly, iterate to drop moves which do not qualify - TODO!!
+            // how? idea: phantom pieces
+        }
+        return resolvingSquares;
     }
     public String toString() {
         Class myClass = this.getClass();

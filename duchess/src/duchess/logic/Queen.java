@@ -18,6 +18,9 @@ public class Queen extends Piece {
         ArrayList<Square> orthogonal = this.findOrthogonalSquares(8);
         ArrayList<Square> moves = new ArrayList<Square>(diagonal);
         moves.addAll(orthogonal);
+        if (myGame.isCheck() == true) {
+            moves = this.squaresToResolveCheck(moves);
+        }
         Square[] result = moves.toArray(new Square[moves.size()]);
         return result;
     }

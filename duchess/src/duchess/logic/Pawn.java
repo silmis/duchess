@@ -66,7 +66,9 @@ public class Pawn extends Piece {
                 legalMoves.add(s);
             }   
         }
-        //System.out.println(legalMoves);
+        if (myGame.isCheck() == true) {
+            legalMoves = this.squaresToResolveCheck(legalMoves);
+        }
         Square[] result = legalMoves.toArray(new Square[legalMoves.size()]);
         return result;
     }

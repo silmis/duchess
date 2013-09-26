@@ -108,20 +108,37 @@ public class Game {
     }
     public boolean move(Piece p, Square square) {
         if (p == null) return false;
-        Square[] possibleMoves = this.possibleMoves(p);
+        Square[] possibleMoves = p.possibleMoves();
         if(possibleMoves.length < 1) { return false; }
         for(Square move : possibleMoves) {
             if ((square.fl() == move.fl()) && (square.rk() == move.rk())) {
                 // if occupied, capture the piece
                 Piece toBeCaptured = this.whoIsAt(move); 
                 if (toBeCaptured != null) {
-                    //if(toBeCaptured.getColor() != p.getColor()) {
-                        pieces.remove(toBeCaptured);
-                    //}
+                    // note: moving to a friendly square 
+                    // is be illegal in possibleMoves()
+                    pieces.remove(toBeCaptured);
                 }
-                // move own piece
                 p.changePos(move.fl(), move.rk());
+                // if king is threatened, game is in check
+                Square[] nextTurnMoves = p.possibleMoves();
+                for (Square nextMove : nextTurnMoves) {
+                    if (this.whoIsAt(nextMove) instanceof King) {
+                        this.isCheck = true;
+                    }
+                }
+                // change turn and see if the player has lost
                 this.whitesTurn = !(this.whitesTurn);
+                if (this.isCheck == true) {
+                    boolean victory = true;
+                    for (Piece p2 : this.pieces) {
+                        if (p2.possibleMoves().length != 0) {
+                            victory = false;
+                        }
+                    }
+                    if (victory) this.isMate = true;
+                    System.out.println("Game over");
+                }
                 return true;
             }
         }

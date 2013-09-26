@@ -1,13 +1,8 @@
 /* TO-DO :
  * 
- * change Piece to use Square instead of rank/file
- * DONE (test) - whoCanMoveHere()
+ * TEST - whoCanMoveHere()
  *      - iterate all pieces(see below), square in possible moves
- *      - should return all or just white/black?
- * should color be somehow represented better?
- *      - teacher says: enum
- *      - split pieces? to find "all white pieces", have to iterate all
- * DONE (test) moves for rest of the pieces
+ * DONE moves for rest of the pieces
  *      DONE - also look at existing ones
  *      DONE - can be combined? bishop+rook=queen?
  * DONE - moving pieces so that capturing works only on opponents pieces
@@ -21,11 +16,18 @@
  * history
  *      - propably pairs of Squares, maybe make a class
  *      - enough info to reconstruct entire game? should be
- * victory conditions
- *      - is check && king cant move && it's not possible to resolve check
+ * DONE victory conditions
+ *      DONE - is check && king cant move && it's not possible to resolve check
+ *        (equivalent to: NO-ONE can move)
+ * TEST - checking:
+ *      TEST - game is check if opponent moves a piece and in the new position king is threatened
+        - make illegal: player moves and exposes one's king to a threat by opponent
  * which piece resolves check? "find square that if blocked
  *        results in opponent piece not being able to 
  *        move to king's square"
+        - problem: how to iterate through squares and find out if they truly
+          "block" a piece. idea: create "phantom" pieces to represent possible
+          situations. might be useful in the future?
  * special moves: en passant
  *      - if pawn moves FROM rank 7 or 2 TWO steps AND opponent in file+-1 
  *        and rank 5 or 4, in the next turn opponent has a special legal move...
@@ -37,3 +39,10 @@
  *        rook moves to file 6 or 4. represented as two successive
  *        same-colour moves?
  */
+
+nice-to have:
+ * change Piece to use Square instead of rank/file
+ * should color be somehow represented better?
+ *      - teacher says: enum
+ *      - split pieces? to find "all white pieces", have to iterate all
+ * maybe make a method that finds pieces of particular color

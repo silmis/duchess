@@ -17,6 +17,9 @@ public class Rook extends Piece {
     public Square[] possibleMoves() {
         if(checkIfMovingPossible() == false) return new Square[0];
         ArrayList<Square> moves = this.findOrthogonalSquares(8); 
+        if (myGame.isCheck() == true) {
+            moves = this.squaresToResolveCheck(moves);
+        }
         Square[] result = moves.toArray(new Square[moves.size()]);
         return result;
     }
