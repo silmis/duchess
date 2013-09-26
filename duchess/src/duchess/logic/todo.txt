@@ -22,6 +22,7 @@
  * TEST - checking:
  *      TEST - game is check if opponent moves a piece and in the new position king is threatened
         - make illegal: player moves and exposes one's king to a threat by opponent
+        - games can be drawn!!
  * which piece resolves check? "find square that if blocked
  *        results in opponent piece not being able to 
  *        move to king's square"
@@ -46,3 +47,4 @@ nice-to have:
  *      - teacher says: enum
  *      - split pieces? to find "all white pieces", have to iterate all
  * maybe make a method that finds pieces of particular color
+ * some set algebraic functions for pieces and squares, union, intersection etc.

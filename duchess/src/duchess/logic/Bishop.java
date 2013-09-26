@@ -15,7 +15,7 @@ public class Bishop extends Piece {
         super(file, rank, color, myGame);
     }
     public Square[] possibleMoves() {
-        if(checkIfMovingPossible() == false) return new Square[0];
+        if(isItMyTurn() == false) return new Square[0];
         ArrayList<Square> moves = this.findDiagonalSquares(8);
         if (myGame.isCheck() == true) {
             moves = this.squaresToResolveCheck(moves);

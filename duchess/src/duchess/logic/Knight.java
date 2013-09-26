@@ -18,7 +18,7 @@ public class Knight extends Piece {
         ArrayList<Square> initialMoves = new ArrayList();
         ArrayList<Square> legalMoves = new ArrayList();
         
-        if(checkIfMovingPossible() == false) return new Square[0];
+        if(isItMyTurn() == false) return new Square[0];
         
         initialMoves.add(new Square(this.file+2, this.rank+1));
         initialMoves.add(new Square(this.file+1, this.rank+2));

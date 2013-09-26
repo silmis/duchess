@@ -52,7 +52,7 @@ public class NewGameTest {
                     assertEquals(p.getFile(), 5);
                     assertEquals(p.getRank(), 1);
                 } else {
-                    assertEquals(p.getFile(), 4);
+                    assertEquals(p.getFile(), 5);
                     assertEquals(p.getRank(), 8);
                 }
             }

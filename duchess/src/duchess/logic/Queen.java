@@ -13,7 +13,7 @@ public class Queen extends Piece {
         super(file, rank, color, myGame);
     }
     public Square[] possibleMoves() {
-        if(checkIfMovingPossible() == false) return new Square[0];
+        if(isItMyTurn() == false) return new Square[0];
         ArrayList<Square> diagonal = this.findDiagonalSquares(8);
         ArrayList<Square> orthogonal = this.findOrthogonalSquares(8);
         ArrayList<Square> moves = new ArrayList<Square>(diagonal);

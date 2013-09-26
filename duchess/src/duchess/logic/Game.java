@@ -8,6 +8,7 @@ public class Game {
     private boolean whitesTurn;
     private ArrayList<Piece> pieces;
     private String[] history;
+    private Piece pieceGivingCheck;
 
     public Game() {
         this.isCheck = false;
@@ -16,6 +17,7 @@ public class Game {
         this.pieces = new ArrayList(32);
         ///this.history = new String[10];
         this.positionPieces();
+        this.pieceGivingCheck = null;
     }
     // load previous game
     public Game(String fileName) {
@@ -26,15 +28,19 @@ public class Game {
         this.isMate = false;
         this.whitesTurn = true;
         this.pieces = new ArrayList(32);
+        this.pieceGivingCheck = null;
     }
     
     public ArrayList<Piece> pieces() { return this.pieces; }
     public boolean isCheck() { return this.isCheck; }
     public boolean isMate() { return this.isMate; }
     public boolean isWhitesTurn() { return this.whitesTurn; }
+    public Piece whoGivesACheck() { return this.pieceGivingCheck; }
     
+    /**
+     * Initializes all pieces at opening position.
+     */
     private void positionPieces() {
-        // initialize all pieces at starting positions
         // pawns
         for (int i=1; i<=8; i++) {
             Pawn w = new Pawn(i, 2, true, this);
@@ -59,12 +65,20 @@ public class Game {
         this.addPiece("Rook", new Square(8,8), false);
         // queens
         this.addPiece("Queen", new Square(4,1), true);
-        this.addPiece("Queen", new Square(5,8), false);
+        this.addPiece("Queen", new Square(4,8), false);
         // kings
         this.addPiece("King", new Square(5,1), true);
-        this.addPiece("King", new Square(4,8), false);
+        this.addPiece("King", new Square(5,8), false);
     }
     // there might be a better way to do this
+    /**
+     * Adds a piece to the chessboard. Makes sure that square is valid and
+     * not occupied.
+     * @param className Type of piece as String, e.g. "Pawn"
+     * @param s Square in which to place piece
+     * @param color True for white, false for black
+     * @return true for success
+     */
     public boolean addPiece(String className, Square s, 
                             boolean color) {
         Class c; 
@@ -86,48 +100,51 @@ public class Game {
         this.pieces.add(newPiece);
         return true;
     }
+    /**
+     * Adds an existing Piece to the chessboard.
+     * @param p Piece
+     * @return true for success
+     */
     public boolean addPiece(Piece p) {
         return this.pieces.add(p);
     }
-    public boolean isValidSquare(Square s) {
-        return s.isValid();
-    }
-    public Piece whoIsAt(Square s) {
-        if (s.isValid() == false) {
-            return null;
-        }
-        for(Piece p : this.pieces) {
-            if ((p.file == s.fl()) && (p.rank == s.rk())) {
-                return p;
-            }
-        }
-        return null;
-    }
+    /**
+     * Alternative for move(Piece p, Square square).
+     * @param pieceIndex The index of the Piece in array Game.pieces
+     * @param square Square to move to.
+     * @return see move(Piece p, Square square)
+     */
     public boolean move(int pieceIndex, Square square) {
         return this.move(this.pieces.get(pieceIndex), square);
     }
+    /**
+     * Moves a piece on the chessboard. If the input move is legal, the
+     * piece is moved to target square. If the square is occupied by an 
+     * opponent, the opponent's piece is captured. The move can result in a
+     * check or mate. A move ends the players turn.
+     * @param p Piece
+     * @param square Square to move to.
+     * @return Returns false if piece is null or piece has no possible moves.
+     * Otherwise returns true.
+     */
     public boolean move(Piece p, Square square) {
         if (p == null) return false;
         Square[] possibleMoves = p.possibleMoves();
-        if(possibleMoves.length < 1) { return false; }
+        //if(possibleMoves.length < 1) { return false; }
         for(Square move : possibleMoves) {
             if ((square.fl() == move.fl()) && (square.rk() == move.rk())) {
-                // if occupied, capture the piece
                 Piece toBeCaptured = this.whoIsAt(move); 
                 if (toBeCaptured != null) {
-                    // note: moving to a friendly square 
-                    // is be illegal in possibleMoves()
-                    pieces.remove(toBeCaptured);
+                    pieces.remove(toBeCaptured); // can't capture own - illegal move
                 }
                 p.changePos(move.fl(), move.rk());
-                // if king is threatened, game is in check
                 Square[] nextTurnMoves = p.possibleMoves();
                 for (Square nextMove : nextTurnMoves) {
                     if (this.whoIsAt(nextMove) instanceof King) {
                         this.isCheck = true;
+                        this.pieceGivingCheck = p;
                     }
                 }
-                // change turn and see if the player has lost
                 this.whitesTurn = !(this.whitesTurn);
                 if (this.isCheck == true) {
                     boolean victory = true;
@@ -144,6 +161,28 @@ public class Game {
         }
         return false;
     }
+    /**
+     * Return the piece occupying a Square.
+     * @param s Square
+     * @return Piece or null if Square not occupied
+     */
+    public Piece whoIsAt(Square s) {
+        if (s.isValid() == false) {
+            return null;
+        }
+        for(Piece p : this.pieces) {
+            if ((p.file == s.fl()) && (p.rank == s.rk())) {
+                return p;
+            }
+        }
+        return null;
+    }
+    /**
+     * Returns which pieces are capable of moving to the input square. 
+     * Note: only concerns the player who can move at the turn in question. 
+     * @param s Square
+     * @return Array of Pieces
+     */
     public Piece[] whoCanMoveHere(Square s) {
         ArrayList<Piece> list = new ArrayList();
         for (Piece p : this.pieces) {
@@ -158,7 +197,11 @@ public class Game {
         return result;
     }
     public Piece[] listPieces() {
+        // TODO
         return new Piece[1];
+    }
+    public boolean isValidSquare(Square s) {
+        return s.isValid();
     }
     public Square[] possibleMoves(int pieceIndex) {
         return pieces.get(pieceIndex).possibleMoves();

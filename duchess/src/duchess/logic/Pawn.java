@@ -17,7 +17,7 @@ public class Pawn extends Piece {
         Square[] initialMoves;
         ArrayList<Square> legalMoves = new ArrayList();
         
-        if(checkIfMovingPossible() == false) {
+        if(isItMyTurn() == false) {
             return new Square[] {};
         }
         
