@@ -15,13 +15,14 @@ import duchess.logic.Game;
  * @author thitkone
  */
 public class Board extends JComponent {
-    public static final int boardSize = 640;
     private boolean queryMode = false;
     private Piece selectedForMovement;
     private Game game;
+    public int boardSize;
     
-    public Board(Game game) {
+    public Board(Game game, int boardSize) {
         this.game = game;
+        this.boardSize = boardSize;
         this.setSize(boardSize, boardSize);
         this.setLocation(20, 20);
         this.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -41,6 +42,7 @@ public class Board extends JComponent {
      * @param vsq VSquare
      */
     public void query(VSquare vsq) {
+        this.clearHighlight();
         if (vsq.getPiece() != null) {
                 Square[] moves = vsq.getPiece().possibleMoves();
                 this.highlight(moves, new Color(0,0,255));

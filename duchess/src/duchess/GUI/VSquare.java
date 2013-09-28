@@ -15,7 +15,8 @@ import java.util.ArrayList;
  * @author thitkone
  */
 public class VSquare extends JPanel implements MouseListener {
-    public static final int sideLength = (int)Math.floor(Board.boardSize / 8.0);
+    public static final int sideLength = 
+            (int)Math.floor(Window.boardSize / 8.0);
     private Square sq;
     private Piece piece;
     private JLabel label;
@@ -39,6 +40,7 @@ public class VSquare extends JPanel implements MouseListener {
     }
     public Square getSquare() { return this.sq; }
     public Piece getPiece() { return this.piece; }
+    
     public void setPiece(Piece p) {
         this.piece = p;
         String className = this.piece.getClass().toString();
@@ -54,7 +56,6 @@ public class VSquare extends JPanel implements MouseListener {
         Board board = (Board)this.getParent();
         
         if (board.isInQueryMode() == true) {
-            board.clearHighlight();
             board.query(this);
         } else { 
             board.movePiece(this);

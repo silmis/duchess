@@ -12,13 +12,25 @@ import java.awt.*;
  *
  * @author thitkone
  */
-public class MainWindow extends javax.swing.JFrame {
+public class Window extends javax.swing.JFrame {
+    public static final int boardSize = 640;
+    public static final int windowWidth = 900;
+    public static final int windowHeight = 700;
     private Game game;
     
-    public MainWindow() {
+    public Window() {
         initComponents();
+        initNewGame();
+        initLeftPane();
+        this.setSize(windowWidth, windowHeight);
+        
+    }
+    private void initLeftPane() {
+        
+    }
+    private void initNewGame() {
         this.game = new Game();
-        Board board = new Board(this.game);
+        Board board = new Board(this.game, boardSize);
         for (int r=1; r<=8; r++) {
             for (int f=1; f<=8; f++) {
                 VSquare s = new VSquare(new Square(f, r));

@@ -5,7 +5,7 @@
 package duchess;
 import java.util.Arrays;
 import duchess.logic.*;
-import duchess.GUI.MainWindow;
+import duchess.GUI.Window;
 /**
  *
  * @author thitkone
@@ -18,8 +18,7 @@ public class Duchess {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MainWindow w = new MainWindow();
-                w.setSize(800, 700);
+                Window w = new Window();
                 w.setVisible(true);
             }
         });
