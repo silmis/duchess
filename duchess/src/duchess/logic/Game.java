@@ -132,7 +132,7 @@ public class Game {
         Square[] possibleMoves = p.possibleMoves();
         //if(possibleMoves.length < 1) { return false; }
         for(Square move : possibleMoves) {
-            if ((square.fl() == move.fl()) && (square.rk() == move.rk())) {
+            if (square.equals(move)) {
                 Piece toBeCaptured = this.whoIsAt(move); 
                 if (toBeCaptured != null) {
                     pieces.remove(toBeCaptured); // can't capture own - illegal move
@@ -171,7 +171,7 @@ public class Game {
             return null;
         }
         for(Piece p : this.pieces) {
-            if ((p.file == s.fl()) && (p.rank == s.rk())) {
+            if (p.getSquare().equals(s)) {
                 return p;
             }
         }
@@ -188,7 +188,7 @@ public class Game {
         for (Piece p : this.pieces) {
             Square[] possibleMoves = p.possibleMoves();
             for (Square move : possibleMoves) {
-                if((s.fl() == move.fl()) && (s.rk() == move.rk()) ) {
+                if(move.equals(s)) {
                     list.add(p);
                 }
             }

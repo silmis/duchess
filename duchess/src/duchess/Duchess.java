@@ -16,9 +16,12 @@ public class Duchess {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Game b = new Game();
-        boolean white = b.move(b.whoIsAt(new Square(3,2)), new Square(3,4));
-        boolean black = b.move(b.whoIsAt(new Square(1,7)), new Square(1,5));
-        MainWindow window = new MainWindow();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                MainWindow w = new MainWindow();
+                w.setSize(800, 700);
+                w.setVisible(true);
+            }
+        });
     }
 }
