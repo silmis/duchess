@@ -17,3 +17,6 @@
 22.9. 6h mm. loppujen nappuloiden liikkuminen, apumetodeja
 26.9. 6h game- ja piece-luokan metodeja, javadokkien kirjoittaminen
 
+5.vko
+28.9. 8h Swingin opetteleminen, ensimmäinen versio GUI:sta
+29.9. 1h Lisää GUIta

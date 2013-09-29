@@ -8,6 +8,7 @@ import duchess.logic.Game;
 import duchess.logic.Piece;
 
 import java.awt.*;
+import javax.swing.*;
 /**
  *
  * @author thitkone
@@ -26,7 +27,13 @@ public class Window extends javax.swing.JFrame {
         
     }
     private void initLeftPane() {
-        
+        JPanel leftPane = new JPanel();
+        leftPane.setSize(200, 640);
+        leftPane.setLocation(680, 20);
+        leftPane.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.add(leftPane);
+        JButton queryButton = new JButton("Query Mode OFF");
+        leftPane.add(queryButton);
     }
     private void initNewGame() {
         this.game = new Game();
@@ -37,6 +44,8 @@ public class Window extends javax.swing.JFrame {
                 board.add(s);
             }
         }
+        // Note: index of Board.getComponents() now corresponds 
+        // to Square.toIndex()
         for (Piece p : this.game.pieces()) {
             Square sq = p.getSquare();
             int position = sq.toIndex();

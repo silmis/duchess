@@ -15,9 +15,9 @@ import duchess.logic.Game;
  * @author thitkone
  */
 public class Board extends JComponent {
+    private Game game;
     private boolean queryMode = false;
     private Piece selectedForMovement;
-    private Game game;
     public int boardSize;
     
     public Board(Game game, int boardSize) {
@@ -54,6 +54,7 @@ public class Board extends JComponent {
             }
             Square[] moves = sqs.toArray(new Square[sqs.size()]);
             this.highlight(moves, new Color(0,0,255));
+            this.highlight(new Square[] {vsq.getSquare()}, new Color(255,0,0));
         }
     }
     public void movePiece(VSquare vsq) {
