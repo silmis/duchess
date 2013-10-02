@@ -11,8 +11,9 @@
  *      - maybe list white and black separately
  *      NO - should be readable to both human and computer?
  * save game
- *      - just pickle pieces?
- *      - when loading positionPieces() gets Piece[] as parameter
+ *      - use memento pattern!
+ *      - then pickle?
+ *      - best if state object can be provided as parameter to game constructor
  * DONE history
  *      DONE - propably pairs of Squares, maybe make a class
  *      DONE - enough info to reconstruct entire game? should be

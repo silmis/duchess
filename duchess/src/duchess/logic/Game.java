@@ -7,7 +7,6 @@ public class Game {
     private boolean isMate;
     private boolean whitesTurn;
     private ArrayList<Piece> pieces;
-    private String[] history;
     private Piece pieceGivingCheck;
     public Logkeeper log;
 
@@ -16,13 +15,19 @@ public class Game {
         this.isMate = false;
         this.whitesTurn = true;
         this.pieces = new ArrayList(32);
-        this.positionPieces();
         this.pieceGivingCheck = null;
         this.log = new Logkeeper();
+        this.positionPieces();
         
     }
     // load previous game
-    public Game(String fileName) {
+    public Game(GameState gs) {
+        this.isCheck = gs.isCheck;
+        this.isMate = gs.isMate;
+        this.whitesTurn = gs.whitesTurn;
+        this.pieces = gs.pieces;
+        this.pieceGivingCheck = gs.pieceGivingCheck;
+        this.log = gs.logger;
     }
     // empty board for testing
     public Game(int any) {
@@ -213,5 +218,27 @@ public class Game {
     }
     public Square[] possibleMoves(Piece p) {
         return p.possibleMoves();
+    }
+    public GameState getGameState() {
+        return new GameState();
+    }
+    /**
+     * Fully describes the state of the game.
+     */
+    public class GameState {
+        public ArrayList<Piece> pieces;
+        public Logkeeper logger;
+        public boolean isCheck;
+        public boolean isMate;
+        public boolean whitesTurn;
+        public Piece pieceGivingCheck;
+        public GameState() {
+            this.pieces = getPieces();
+            this.logger = log;
+            this.isCheck = isCheck();
+            this.isMate = isMate();
+            this.whitesTurn = isWhitesTurn();
+            this.pieceGivingCheck = whoGivesACheck();
+        }
     }
 }
