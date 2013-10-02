@@ -47,6 +47,6 @@ public class Square {
         return ((this.rk()-1) * 8 + this.fl())-1;
     }
     public String toString() {
-        return "Square (" + this.file + "," + this.rank+")";
+        return "(" + this.file + "," + this.rank+")";
     }
 }

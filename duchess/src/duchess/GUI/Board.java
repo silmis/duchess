@@ -27,7 +27,11 @@ public class Board extends JComponent {
         this.setLocation(20, 20);
         this.setBorder(BorderFactory.createLineBorder(Color.black));
     }
-    public boolean isInQueryMode() { return this.queryMode; }
+    public boolean getQueryMode() { return this.queryMode; }
+    public boolean toggleQuery() { 
+        this.queryMode = !(this.queryMode);
+        return this.queryMode;
+     }
     public void selectPiece(Piece p) {
         this.selectedForMovement = p;
     }

@@ -8,18 +8,24 @@ import duchess.logic.Game;
 import duchess.logic.Piece;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 /**
  *
  * @author thitkone
  */
-public class Window extends javax.swing.JFrame {
+public class Window extends JFrame {
     public static final int boardSize = 640;
     public static final int windowWidth = 900;
     public static final int windowHeight = 700;
     private Game game;
+    private Board board;
+    private JPanel leftPane;
+    private JButton queryButton;
+    private Container container;
     
     public Window() {
+        container = this.getContentPane();
         initComponents();
         initNewGame();
         initLeftPane();
@@ -27,33 +33,43 @@ public class Window extends javax.swing.JFrame {
         
     }
     private void initLeftPane() {
-        JPanel leftPane = new JPanel();
-        leftPane.setSize(200, 640);
-        leftPane.setLocation(680, 20);
-        leftPane.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.add(leftPane);
-        JButton queryButton = new JButton("Query Mode OFF");
-        leftPane.add(queryButton);
+        this.leftPane = new JPanel();
+        this.leftPane.setSize(200, 640);
+        this.leftPane.setLocation(680, 20);
+        this.leftPane.setBorder(BorderFactory.createLineBorder(Color.black));
+        container.add(this.leftPane);
+        
+        this.queryButton = new JButton("Query Mode OFF");
+        this.queryButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                boolean on = board.toggleQuery();
+                board.clearHighlight();
+                if (on==true) queryButton.setText("Query Mode ON");
+                else queryButton.setText("Query Mode OFF");
+            }
+        });
+        
+        this.leftPane.add(this.queryButton);
     }
     private void initNewGame() {
         this.game = new Game();
-        Board board = new Board(this.game, boardSize);
+        this.board = new Board(this.game, boardSize);
         for (int r=1; r<=8; r++) {
             for (int f=1; f<=8; f++) {
                 VSquare s = new VSquare(new Square(f, r));
-                board.add(s);
+                this.board.add(s);
             }
         }
         // Note: index of Board.getComponents() now corresponds 
         // to Square.toIndex()
-        for (Piece p : this.game.pieces()) {
+        for (Piece p : this.game.getPieces()) {
             Square sq = p.getSquare();
             int position = sq.toIndex();
             VSquare vsq = (VSquare) board.getComponent(position);
             vsq.setPiece(p);
             
         }
-        this.add(board);
+        container.add(board);
     }
     public Game getGame() { return this.game; }
 

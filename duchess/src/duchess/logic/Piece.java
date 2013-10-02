@@ -126,10 +126,12 @@ public abstract class Piece {
         return resolvingSquares;
     }
     public String toString() {
-        Class myClass = this.getClass();
+        String className = this.getClass().toString();
+        String[] splitted = className.split("\\.");
+        className = splitted[splitted.length-1];
         String color = this.color ? "white" : "black";
-        String s = "I am a " + color + " " + myClass  + 
-                   " at (" + this.file + "," + this.rank + ")";
+        String s = color + " " + className  + 
+                   " at " + this.file + "," + this.rank;
         return s;
     }
 }

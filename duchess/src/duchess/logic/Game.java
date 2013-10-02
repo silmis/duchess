@@ -9,15 +9,17 @@ public class Game {
     private ArrayList<Piece> pieces;
     private String[] history;
     private Piece pieceGivingCheck;
+    public Logkeeper log;
 
     public Game() {
         this.isCheck = false;
         this.isMate = false;
         this.whitesTurn = true;
         this.pieces = new ArrayList(32);
-        ///this.history = new String[10];
         this.positionPieces();
         this.pieceGivingCheck = null;
+        this.log = new Logkeeper();
+        
     }
     // load previous game
     public Game(String fileName) {
@@ -29,9 +31,10 @@ public class Game {
         this.whitesTurn = true;
         this.pieces = new ArrayList(32);
         this.pieceGivingCheck = null;
+        this.log = new Logkeeper();
     }
     
-    public ArrayList<Piece> pieces() { return this.pieces; }
+    public ArrayList<Piece> getPieces() { return this.pieces; }
     public boolean isCheck() { return this.isCheck; }
     public boolean isMate() { return this.isMate; }
     public boolean isWhitesTurn() { return this.whitesTurn; }
@@ -137,6 +140,7 @@ public class Game {
                 if (toBeCaptured != null) {
                     pieces.remove(toBeCaptured); // can't capture own - illegal move
                 }
+                this.log.add(p, p.getSquare(), move);
                 p.changePos(move.fl(), move.rk());
                 Square[] nextTurnMoves = p.possibleMoves();
                 for (Square nextMove : nextTurnMoves) {
@@ -196,9 +200,10 @@ public class Game {
         Piece[] result = list.toArray(new Piece[list.size()]);
         return result;
     }
-    public Piece[] listPieces() {
-        // TODO
-        return new Piece[1];
+    public void listPieces() {
+        for (Piece p : this.pieces) {
+            System.out.println(p);
+        }
     }
     public boolean isValidSquare(Square s) {
         return s.isValid();

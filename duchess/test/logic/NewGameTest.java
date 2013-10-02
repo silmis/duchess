@@ -38,7 +38,7 @@ public class NewGameTest {
     @Before
     public void setUp() {
         gm = new Game();
-        pieces = gm.pieces();
+        pieces = gm.getPieces();
     }
     
     @After

@@ -55,7 +55,7 @@ public class VSquare extends JPanel implements MouseListener {
     public void mousePressed(MouseEvent e) {
         Board board = (Board)this.getParent();
         
-        if (board.isInQueryMode() == true) {
+        if (board.getQueryMode() == true) {
             board.query(this);
         } else { 
             board.movePiece(this);
