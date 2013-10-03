@@ -20,3 +20,5 @@
 5.vko
 28.9. 8h Swingin opetteleminen, ensimmäinen versio GUI:sta
 29.9. 1h Lisää GUIta
+2.10. 3h Swingiä, GUI-luokkia
+3.10. 1h Sekvenssikaaviot 

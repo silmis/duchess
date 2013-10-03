@@ -1,0 +1,11 @@
+title Moving a piece successfully
+
+VSQuare->Board: mousePressed()
+Board->Board: selectPiece(Piece)
+Board->Board: highlight(Piece.possibleSquares)
+VSQuare->Board: mousePressed()
+Board->Game: move(Piece, TargetSquare)
+Game->Logkeeper: add(Piece, Piece.getSquare(), TargetSquare)
+Game->Piece: changePos(file, rank)
+Game->Game: check victory conditions
+Game->Board: return true

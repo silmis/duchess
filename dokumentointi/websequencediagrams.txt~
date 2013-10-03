@@ -1,0 +1,25 @@
+title Moving a piece successfully
+
+user->GUI.VSQuare: select square
+GUI.VSQuare->GUI.Board: mouse event
+GUI.Board->GUI.Board: stores which piece
+GUI.Board->GUI.Board: highlights possible squares
+user->GUI.VSQuare: select another square
+GUI.VSQuare->GUI.Board: mouse event
+GUI.Board->logic.Game: move(Piece, TargetSquare)
+logic.Game->logic.Logkeeper: add(Piece, StartSquare, TargetSquare)
+logic.Game->logic.Piece: change position
+logic.Game->logic.Game: check victory conditions
+logic.Game-->GUI.Board: return true
+
+
+title Saving a game
+
+user->GUI.MainWindow: press "save"
+GUI.MainWindow->logic.SaveManager: request save
+logic.SaveManager->logic.Logkeeper: request GameState
+logic.Logkeeper->+logic.Game.GameState: new GameState()
+logic.Game.GameState-->logic.SaveManager: GameState object
+logic.SaveManager->logic.SaveManager: write file to disk \non predetermined location
+
+

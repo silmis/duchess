@@ -8,7 +8,7 @@ package duchess.logic;
  *
  * @author thitkone
  */
-public class OutputHandler {
+public class SaveManager {
     public void saveGame(Game.GameState gs) {}
     public Game.GameState loadGame(String fileName) { return null; }
 }
