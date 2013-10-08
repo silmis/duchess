@@ -21,11 +21,13 @@ public class King extends Piece {
         ArrayList<Square> moves = new ArrayList<Square>(diagonal);
         moves.addAll(orthogonal);
         // king can't move to an threatened square TO-DO
-        /*for (Square move : moves) {
-            if (myGame.whoCanMoveHere(move).length != 0) {
+        ArrayList<Square> moveCopy = new ArrayList<Square>(moves);
+        for (Square move : moveCopy) {
+            if (myGame.whoCanMoveHere(move, true, true).length > 0) {
                 moves.remove(move);
             }
-        }*/
+        }
+        System.out.println(this + " possible moves called");
         Square[] result = moves.toArray(new Square[moves.size()]);
         return result;
     }

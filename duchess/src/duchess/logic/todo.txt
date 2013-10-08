@@ -20,8 +20,8 @@
  * DONE victory conditions
  *      DONE - is check && king cant move && it's not possible to resolve check
  *        (equivalent to: NO-ONE can move)
- * TEST - checking:
- *      TEST - game is check if opponent moves a piece and in the new position king is threatened
+ * check & mate:
+ *      DONE - game is check if opponent moves a piece and in the new position king is threatened
         - make illegal: player moves and exposes one's king to a threat by opponent
         - games can be drawn!!
  * which piece resolves check? "find square that if blocked
@@ -40,6 +40,7 @@
  *        moved king has a special legal move to file 7 or 3 (2 steps).
  *        rook moves to file 6 or 4. represented as two successive
  *        same-colour moves?
+ * fix pawn possible moves (showns taking own as possible)
  */
 
 nice-to have:

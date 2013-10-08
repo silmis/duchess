@@ -6,6 +6,7 @@ public class Game {
     private boolean isCheck;
     private boolean isMate;
     private boolean whitesTurn;
+    private boolean checkResolved;
     private ArrayList<Piece> pieces;
     private Piece pieceGivingCheck;
     public Logkeeper log;
@@ -14,6 +15,7 @@ public class Game {
         this.isCheck = false;
         this.isMate = false;
         this.whitesTurn = true;
+        this.checkResolved = false;
         this.pieces = new ArrayList(32);
         this.pieceGivingCheck = null;
         this.log = new Logkeeper();
@@ -34,6 +36,7 @@ public class Game {
         this.isCheck = false;
         this.isMate = false;
         this.whitesTurn = true;
+        this.checkResolved = false;
         this.pieces = new ArrayList(32);
         this.pieceGivingCheck = null;
         this.log = new Logkeeper();
@@ -44,7 +47,8 @@ public class Game {
     public boolean isMate() { return this.isMate; }
     public boolean isWhitesTurn() { return this.whitesTurn; }
     public Piece whoGivesACheck() { return this.pieceGivingCheck; }
-    
+    protected void changeTurn() { this.whitesTurn = !(this.whitesTurn); }
+    protected void setCheck(boolean isCheck) { this.isCheck = isCheck; }
     /**
      * Initializes all pieces at opening position.
      */
@@ -77,6 +81,41 @@ public class Game {
         // kings
         this.addPiece("King", new Square(5,1), true);
         this.addPiece("King", new Square(5,8), false);
+    }
+    private void updateCheck(Piece lastMovedPiece) {
+        if (this.isCheck == false) {
+            Square[] nextTurnMoves = lastMovedPiece.possibleMoves();
+            for (Square nextMove : nextTurnMoves) {
+                if (this.whoIsAt(nextMove) instanceof King) {
+                    this.isCheck = true;
+                    this.pieceGivingCheck = lastMovedPiece;
+                    System.out.println("Game checked");
+                }
+            }
+        } else { // if game was in check and a move was made, it resolved it
+            this.isCheck = false;
+            this.checkResolved = false;
+            System.out.println("Check resolved");
+        }
+    }
+    private void areVictoryConditionsMet(Piece lastMovedPiece) {
+        System.out.println("victoryconditions called");
+        if (this.isCheck == true) {
+            boolean victory = true;
+            for (Piece p : this.pieces) {
+                System.out.println(p);
+                if (p.possibleMoves().length != 0) {
+                    victory = false;
+                    System.out.println("no victory");
+                }
+            }
+            if (victory) {
+                this.isMate = true;
+                String winner = !(lastMovedPiece.getColor()) ? 
+                        "black" : "white";
+                System.out.println("Game over! Winner: " +winner);
+            }
+        }
     }
     // there might be a better way to do this
     /**
@@ -138,7 +177,6 @@ public class Game {
     public boolean move(Piece p, Square square) {
         if (p == null) return false;
         Square[] possibleMoves = p.possibleMoves();
-        //if(possibleMoves.length < 1) { return false; }
         for(Square move : possibleMoves) {
             if (square.equals(move)) {
                 Piece toBeCaptured = this.whoIsAt(move); 
@@ -147,24 +185,9 @@ public class Game {
                 }
                 this.log.add(p, p.getSquare(), move);
                 p.changePos(move.fl(), move.rk());
-                Square[] nextTurnMoves = p.possibleMoves();
-                for (Square nextMove : nextTurnMoves) {
-                    if (this.whoIsAt(nextMove) instanceof King) {
-                        this.isCheck = true;
-                        this.pieceGivingCheck = p;
-                    }
-                }
-                this.whitesTurn = !(this.whitesTurn);
-                if (this.isCheck == true) {
-                    boolean victory = true;
-                    for (Piece p2 : this.pieces) {
-                        if (p2.possibleMoves().length != 0) {
-                            victory = false;
-                        }
-                    }
-                    if (victory) this.isMate = true;
-                    System.out.println("Game over");
-                }
+                this.updateCheck(p);
+                this.changeTurn();
+                this.areVictoryConditionsMet(p);
                 return true;
             }
         }
@@ -188,22 +211,45 @@ public class Game {
     }
     /**
      * Returns which pieces are capable of moving to the input square. 
-     * Note: only concerns the player who can move at the turn in question. 
+     * Note: only concerns the player who can move at the turn in question.
      * @param s Square
+     * @param opponent if true, return returns opponent's pieces
+     * @param excludeKings leave kings out of this (needed for resolving check)
      * @return Array of Pieces
      */
-    public Piece[] whoCanMoveHere(Square s) {
+    public Piece[] whoCanMoveHere(Square s, boolean opponent, 
+            boolean excludeKings) {
+        boolean checkedAtBeginning = this.isCheck;
+        if (opponent==true) {
+            this.changeTurn();
+            this.setCheck(false);
+        }
+        ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
+        if (excludeKings == true) {
+            for(Piece p : piecesCopy) {
+                if (p instanceof King) piecesCopy.remove(p);
+            }
+        }
         ArrayList<Piece> list = new ArrayList();
-        for (Piece p : this.pieces) {
+        for (Piece p : piecesCopy) {
             Square[] possibleMoves = p.possibleMoves();
             for (Square move : possibleMoves) {
                 if(move.equals(s)) {
                     list.add(p);
+                    System.out.println(p);
                 }
             }
+        }      
+        if (opponent==true) {
+            this.whitesTurn = !(this.whitesTurn);
+            this.isCheck = checkedAtBeginning;
+        
         }
         Piece[] result = list.toArray(new Piece[list.size()]);
         return result;
+    }
+    public Piece[] whoCanMoveHere(Square s) {
+        return whoCanMoveHere(s, false, false);
     }
     public void listPieces() {
         for (Piece p : this.pieces) {

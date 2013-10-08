@@ -112,7 +112,14 @@ public abstract class Piece {
     protected ArrayList<Square> squaresToResolveCheck(
             ArrayList<Square> moves) {
         ArrayList<Square> resolvingSquares = new ArrayList();
+        
+        // pretend it's opponent's turn
+        boolean checkedAtBeginning = myGame.isCheck();
+        myGame.changeTurn();
+        myGame.setCheck(false);
+        
         for (Square myMove : moves) {
+            
             Square[] enemyMoves = myGame.whoGivesACheck().possibleMoves();
             for (Square enemyMove : enemyMoves) {
                 if ((myMove.fl() == enemyMove.fl()) &&
@@ -122,7 +129,14 @@ public abstract class Piece {
             }
             // lastly, iterate to drop moves which do not qualify - TODO!!
             // how? idea: phantom pieces? too complex?
+            // custom exceptions?
         }
+        // stop pretending
+        myGame.changeTurn();
+        myGame.setCheck(checkedAtBeginning);
+        
+        System.out.println("resolver called");
+        //return moves;
         return resolvingSquares;
     }
     public String toString() {
