@@ -11,8 +11,11 @@ import java.util.ArrayList;
  * @author thitkone
  */
 public class Knight extends Piece {
-    public Knight(int file, int rank, boolean color, Game myGame) {
-        super(file, rank, color, myGame);
+    public Knight(int pieceID, int file, int rank, boolean color, Game myGame) {
+        super(pieceID, file, rank, color, myGame);
+    }
+    public Knight(Knight p) {
+        super(p.pieceID, p.file, p.rank, p.color, p.myGame);
     }
     public Square[] possibleMoves() {
         ArrayList<Square> initialMoves = new ArrayList();
@@ -42,8 +45,11 @@ public class Knight extends Piece {
             }
         }
         
-        if (myGame.isCheck() == true) {
+        if ((myGame.isCheck() == true) && (myGame.resolveCheck() == true) &&
+                (this.color == myGame.isWhitesTurn())) {
+            myGame.setResolveCheck(false);
             legalMoves = this.squaresToResolveCheck(legalMoves);
+            myGame.setResolveCheck(true);
         }
         Square[] result = legalMoves.toArray(new Square[legalMoves.size()]);
         return result;

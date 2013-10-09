@@ -9,12 +9,14 @@ import java.util.ArrayList;
  * @author thitkone
  */
 public abstract class Piece {
+    public final int pieceID;
     protected boolean color;
     protected int file;
     protected int rank;
     protected Game myGame;
 
-    public Piece(int file, int rank, boolean color, Game myGame) {
+    public Piece(int pieceID, int file, int rank, boolean color, Game myGame) {
+        this.pieceID = pieceID;
         this.file = file;
         this.rank = rank;
         this.color = color;
@@ -111,32 +113,45 @@ public abstract class Piece {
      */
     protected ArrayList<Square> squaresToResolveCheck(
             ArrayList<Square> moves) {
+        
+        Square kingSquare = null;
+        for(Piece p : myGame.getPieces()) {
+            if ((p instanceof King) && 
+                    (p.getColor() == myGame.isWhitesTurn())) {
+                kingSquare = p.getSquare();
+            } 
+        }
+        
         ArrayList<Square> resolvingSquares = new ArrayList();
-        
-        // pretend it's opponent's turn
-        boolean checkedAtBeginning = myGame.isCheck();
-        myGame.changeTurn();
-        myGame.setCheck(false);
-        
         for (Square myMove : moves) {
-            
-            Square[] enemyMoves = myGame.whoGivesACheck().possibleMoves();
+ 
+            // pretend it's opponent's turn
+            myGame.changeTurn();
+            Square[] enemyMoves = myGame.lastMovedPiece().possibleMoves();
+            myGame.changeTurn();
+             
             for (Square enemyMove : enemyMoves) {
-                if ((myMove.fl() == enemyMove.fl()) &&
-                    (myMove.rk() == enemyMove.rk())) {
-                    resolvingSquares.add(myMove);
+                if (myMove.equals(enemyMove)) {
+                    Piece pieceGivingCheck = myGame.lastMovedPiece();
+                    myGame.move(this, myMove);
+                    Square[] tentative = pieceGivingCheck.possibleMoves();
+                    myGame.undo();
+                    boolean squareResolvesCheck = true;
+                    for (Square tt : tentative) {
+                        if (tt.equals(kingSquare)) {
+                            squareResolvesCheck = false;
+                        }
+                    }
+                    if (squareResolvesCheck) { 
+                        resolvingSquares.add(myMove);
+                    }
                 }
             }
-            // lastly, iterate to drop moves which do not qualify - TODO!!
-            // how? idea: phantom pieces? too complex?
-            // custom exceptions?
+            Square enemyPosition = myGame.lastMovedPiece().getSquare();
+            if (myMove.equals(enemyPosition)) { 
+                resolvingSquares.add(enemyPosition);
+            }
         }
-        // stop pretending
-        myGame.changeTurn();
-        myGame.setCheck(checkedAtBeginning);
-        
-        System.out.println("resolver called");
-        //return moves;
         return resolvingSquares;
     }
     public String toString() {

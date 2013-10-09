@@ -49,7 +49,7 @@ public class Board extends JComponent {
         this.clearHighlight();
         if (vsq.getPiece() != null) {
                 Square[] moves = vsq.getPiece().possibleMoves();
-                this.highlight(moves, new Color(0,0,255));
+                this.highlight(moves, new Color(255,255,255));
         } else {
             Piece[] pieces = game.whoCanMoveHere(vsq.getSquare());
             ArrayList<Square> sqs = new ArrayList();
@@ -57,37 +57,62 @@ public class Board extends JComponent {
                 sqs.add(p.getSquare());
             }
             Square[] moves = sqs.toArray(new Square[sqs.size()]);
-            this.highlight(moves, new Color(0,0,255));
+            this.highlight(moves, new Color(0,255,0));
             this.highlight(new Square[] {vsq.getSquare()}, new Color(255,0,0));
         }
     }
     public void movePiece(VSquare vsq) {
         Piece previous = this.getSelectedPiece();
-        if ((vsq.getPiece() != null) && 
-                 (previous == null)) {
-             this.selectPiece(vsq.getPiece());
-             this.highlight(vsq.getPiece().possibleMoves(), new Color(0,0,255));
-         } else if (((vsq.getPiece() != null) && 
-                     (vsq.getPiece().getColor() == previous.getColor())) && 
+        previous = game.refreshPieceReference(previous);
+        Piece clicked = vsq.getPiece();
+        // there's a piece in the clicked square and there's no selected piece
+        if ((clicked != null) && (previous == null)) {
+             this.selectPiece(clicked);
+             this.highlight(clicked.possibleMoves(), new Color(0,0,255));
+        // there's a piece in the clicked square and it's the same color as the selected piece
+        } else if (((clicked != null) && 
+                    (clicked.getColor() == previous.getColor())) && 
                     (previous!= null)) {
              this.unSelectPiece();
              this.clearHighlight();
-         } else if (((vsq.getPiece() == null) && (previous != null)) || 
-                    ((vsq.getPiece() != null) && 
-                     (vsq.getPiece().getColor() != previous.getColor()))) {
-             VSquare prevSq = (VSquare) this.getComponent(previous.getSquare().toIndex());
-             boolean success = 
-                     game.move(previous, vsq.getSquare());
-             if (success == true) {
-                 vsq.setPiece(previous);
-                 prevSq.unSetPiece();
+        // there is no piece in the clicked square and something is selected OR
+        // there is a piece in the clicked square and it's of opposite color
+        } else if (((clicked == null) && (previous != null)) || 
+                   ((clicked != null) && 
+                    (clicked.getColor() != previous.getColor()))) {
+
+            VSquare prevSq = (VSquare) this.getComponent(
+                    previous.getSquare().toIndex());
+            
+            boolean success = 
+                    game.move(previous, vsq.getSquare());
+            if (success == true) {
+                this.updatePiecePositions();
+                this.unSelectPiece();
+                if (game.isMate()) {
+                    this.victory();
+                }
+            } else {
                  this.unSelectPiece();
                  this.clearHighlight();
-             } else {
-                 this.unSelectPiece();
-                 this.clearHighlight();
-             }
-         }
+            }
+        }
+    }
+    public void updatePiecePositions() {
+        this.clearHighlight();
+        Component[] vsqs = this.getComponents();
+        for (Component vsq : vsqs) {
+            ((VSquare)vsq).unSetPiece();
+        }
+        // index of Board.getComponents() corresponds 
+        // to Square.toIndex()
+        for (Piece p : this.game.getPieces()) {
+            Square sq = p.getSquare();
+            int position = sq.toIndex();
+            VSquare vsq = (VSquare) this.getComponent(position);
+            vsq.setPiece(p);
+            
+        }
     }
     public void highlight(Square[] moves, Color c) {
         for (Square sq : moves) {
@@ -104,5 +129,10 @@ public class Board extends JComponent {
             VSquare vsq = (VSquare) c;
             vsq.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.black));
         }
+    }
+    private void victory() {
+        String winner = !(game.isWhitesTurn()) ? 
+                "white" : "black";
+        JOptionPane.showMessageDialog(null, "Game over, winner is: " + winner);
     }
 }

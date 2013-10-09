@@ -50,7 +50,7 @@ public class MBishopTest {
     public void EmptyBoardListAllMoves() {
         gm = new Game(0); // no other pieces
         Square target = new Square(4,5);
-        gm.addPiece("Bishop", target, true);
+        gm.addPiece("Bishop", 1, target, true);
         /*System.out.println("EmptyBoardListAllMoves");
         for (Square move : gm.possibleMoves(gm.whoIsAt(target))) {
             System.out.println(move);
@@ -63,9 +63,9 @@ public class MBishopTest {
     public void PathBlockedListAllMoves() {
         gm = new Game(0);
         Square target = new Square(4,5);
-        gm.addPiece("Bishop", target, true);
-        gm.addPiece("Pawn", new Square(5,4), true);
-        gm.addPiece("Pawn", new Square(6,7), false);
+        gm.addPiece("Bishop", 1, target, true);
+        gm.addPiece("Pawn", 2, new Square(5,4), true);
+        gm.addPiece("Pawn", 3, new Square(6,7), false);
         /*System.out.println("PathBlockedListAllMoves");
         for (Square move : gm.possibleMoves(gm.whoIsAt(target))) {
             System.out.println(move);
@@ -75,7 +75,7 @@ public class MBishopTest {
     // 
     public void NewGameBishopCantMove() {
         gm = new Game();
-        Square[] moves = gm.possibleMoves(gm.whoIsAt(new Square(3,1)));
+        Square[] moves = gm.whoIsAt(new Square(3,1)).possibleMoves();
         boolean isEmpty = (moves.length == 0);
         assertEquals(isEmpty, true);
     }

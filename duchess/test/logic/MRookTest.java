@@ -50,7 +50,7 @@ public class MRookTest {
     public void EmptyBoardListAllMoves() {
         gm = new Game(0); // no other pieces
         Square target = new Square(4,5);
-        gm.addPiece("Rook", target, true);
+        gm.addPiece("Rook", 1, target, true);
         /*System.out.println("EmptyBoardListAllMoves");
         for (Square move : gm.possibleMoves(gm.whoIsAt(target))) {
             System.out.println(move);
@@ -63,9 +63,9 @@ public class MRookTest {
     public void PathBlockedListAllMoves() {
         gm = new Game(0);
         Square target = new Square(4,5);
-        gm.addPiece("Rook", target, true);
-        gm.addPiece("Pawn", new Square(4,6), true);
-        gm.addPiece("Pawn", new Square(5,5), false);
+        gm.addPiece("Rook", 1, target, true);
+        gm.addPiece("Pawn", 2, new Square(4,6), true);
+        gm.addPiece("Pawn", 3, new Square(5,5), false);
         /*System.out.println("PathBlockedListAllMoves");
         for (Square move : gm.possibleMoves(gm.whoIsAt(target))) {
             System.out.println(move);
@@ -75,7 +75,7 @@ public class MRookTest {
     // 
     public void NewGameRookCantMove() {
         gm = new Game();
-        Square[] moves = gm.possibleMoves(gm.whoIsAt(new Square(1,1)));
+        Square[] moves = gm.whoIsAt(new Square(1,1)).possibleMoves();
         boolean isEmpty = (moves.length == 0);
         assertEquals(isEmpty, true);
     }

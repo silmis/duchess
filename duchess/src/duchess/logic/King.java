@@ -11,8 +11,11 @@ import java.util.ArrayList;
  * @author thitkone
  */
 public class King extends Piece {
-    public King(int file, int rank, boolean color, Game myGame) {
-        super(file, rank, color, myGame);
+    public King(int pieceID, int file, int rank, boolean color, Game myGame) {
+        super(pieceID, file, rank, color, myGame);
+    }
+    public King(King p) {
+        super(p.pieceID, p.file, p.rank, p.color, p.myGame);
     }
     public Square[] possibleMoves() {
         if(isItMyTurn() == false) return new Square[0];
@@ -20,14 +23,15 @@ public class King extends Piece {
         ArrayList<Square> orthogonal = this.findOrthogonalSquares(1);
         ArrayList<Square> moves = new ArrayList<Square>(diagonal);
         moves.addAll(orthogonal);
-        // king can't move to an threatened square TO-DO
+        // king can't move to an threatened square
         ArrayList<Square> moveCopy = new ArrayList<Square>(moves);
         for (Square move : moveCopy) {
+            myGame.setResolveCheck(false);
             if (myGame.whoCanMoveHere(move, true, true).length > 0) {
                 moves.remove(move);
             }
+            myGame.setResolveCheck(true);
         }
-        System.out.println(this + " possible moves called");
         Square[] result = moves.toArray(new Square[moves.size()]);
         return result;
     }

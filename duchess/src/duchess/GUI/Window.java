@@ -22,6 +22,7 @@ public class Window extends JFrame {
     private Board board;
     private JPanel leftPane;
     private JButton queryButton;
+    private JButton undoButton;
     private Container container;
     
     public Window() {
@@ -31,6 +32,18 @@ public class Window extends JFrame {
         initLeftPane();
         this.setSize(windowWidth, windowHeight);
         
+    }
+    private void initNewGame() {
+        this.game = new Game();
+        this.board = new Board(this.game, boardSize);
+        for (int r=1; r<=8; r++) {
+            for (int f=1; f<=8; f++) {
+                VSquare s = new VSquare(new Square(f, r));
+                this.board.add(s);
+            }
+        }
+        container.add(board);
+        board.updatePiecePositions();
     }
     private void initLeftPane() {
         this.leftPane = new JPanel();
@@ -48,28 +61,17 @@ public class Window extends JFrame {
                 else queryButton.setText("Query Mode OFF");
             }
         });
+        this.undoButton = new JButton("Undo move");
+        this.undoButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                game.undo();
+                board.clearHighlight();
+                board.updatePiecePositions();
+            }
+        });
         
         this.leftPane.add(this.queryButton);
-    }
-    private void initNewGame() {
-        this.game = new Game();
-        this.board = new Board(this.game, boardSize);
-        for (int r=1; r<=8; r++) {
-            for (int f=1; f<=8; f++) {
-                VSquare s = new VSquare(new Square(f, r));
-                this.board.add(s);
-            }
-        }
-        // Note: index of Board.getComponents() now corresponds 
-        // to Square.toIndex()
-        for (Piece p : this.game.getPieces()) {
-            Square sq = p.getSquare();
-            int position = sq.toIndex();
-            VSquare vsq = (VSquare) board.getComponent(position);
-            vsq.setPiece(p);
-            
-        }
-        container.add(board);
+        this.leftPane.add(this.undoButton);
     }
     public Game getGame() { return this.game; }
 

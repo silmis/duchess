@@ -14,20 +14,20 @@
  *      - use memento pattern!
  *      - then pickle?
  *      - best if state object can be provided as parameter to game constructor
- * DONE history
- *      DONE - propably pairs of Squares, maybe make a class
+ * history
+ *      DONE - probably pairs of Squares, maybe make a class
  *      DONE - enough info to reconstruct entire game? should be
  * DONE victory conditions
  *      DONE - is check && king cant move && it's not possible to resolve check
  *        (equivalent to: NO-ONE can move)
- * check & mate:
+ * DONE check & mate:
  *      DONE - game is check if opponent moves a piece and in the new position king is threatened
-        - make illegal: player moves and exposes one's king to a threat by opponent
-        - games can be drawn!!
- * which piece resolves check? "find square that if blocked
+ * make illegal: player moves and exposes one's king to a threat by opponent
+ * games can be drawn!!
+ * DONE - which piece resolves check? "find square that if blocked
  *        results in opponent piece not being able to 
  *        move to king's square"
-        - problem: how to iterate through squares and find out if they truly
+        DONE - problem: how to iterate through squares and find out if they truly
           "block" a piece. idea: create "phantom" pieces to represent possible
           situations. might be useful in the future?
  * special moves: en passant
@@ -40,7 +40,9 @@
  *        moved king has a special legal move to file 7 or 3 (2 steps).
  *        rook moves to file 6 or 4. represented as two successive
  *        same-colour moves?
- * fix pawn possible moves (showns taking own as possible)
+ * DONE fix pawn possible moves (showns taking own as possible)
+ * logkeeper now screwed. it may be redundant.
+ * NOT WORKING Pawn promotion!!
  */
 
 nice-to have:

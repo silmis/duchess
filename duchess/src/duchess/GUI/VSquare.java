@@ -30,9 +30,9 @@ public class VSquare extends JPanel implements MouseListener {
         this.setBorder(BorderFactory.createLineBorder(Color.black));
         this.setOpaque(true);
         if ( (sq.fl() + sq.rk()) % 2 == 0) {
-            this.setBackground(Color.black);
+            this.setBackground(Color.pink);
         } else {
-            this.setBackground(Color.white);
+            this.setBackground(Color.lightGray);
         }
         addMouseListener(this);
         this.label = new JLabel();
@@ -46,7 +46,9 @@ public class VSquare extends JPanel implements MouseListener {
         String className = this.piece.getClass().toString();
         String[] splitted = className.split("\\.");
         className = splitted[splitted.length-1];
+        Color col = p.getColor() ? Color.white : Color.black;
         this.label.setText(className);
+        this.label.setForeground(col);
     }
     public void unSetPiece() {
         this.piece = null;

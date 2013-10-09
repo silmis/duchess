@@ -21,4 +21,8 @@
 28.9. 8h Swingin opetteleminen, ensimmäinen versio GUI:sta
 29.9. 1h Lisää GUIta
 2.10. 3h Swingiä, GUI-luokkia
-3.10. 1h Sekvenssikaaviot 
+3.10. 1h Sekvenssikaaviot
+
+6.vko
+8.10. 10h ongelmia voittoehtojen kanssa
+  

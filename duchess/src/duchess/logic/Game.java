@@ -1,123 +1,165 @@
 package duchess.logic;
 import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.lang.reflect.Constructor;
 
 public class Game {
     private boolean isCheck;
+    private boolean resolveCheck;
     private boolean isMate;
     private boolean whitesTurn;
-    private boolean checkResolved;
     private ArrayList<Piece> pieces;
-    private Piece pieceGivingCheck;
+    private Piece lastMovedPiece;
+    private ArrayDeque<GameState> pastStates;
     public Logkeeper log;
 
     public Game() {
         this.isCheck = false;
+        this.resolveCheck = true;
         this.isMate = false;
         this.whitesTurn = true;
-        this.checkResolved = false;
         this.pieces = new ArrayList(32);
-        this.pieceGivingCheck = null;
+        this.lastMovedPiece = null;
         this.log = new Logkeeper();
+        this.pastStates = new ArrayDeque();
         this.positionPieces();
-        
     }
     // load previous game
     public Game(GameState gs) {
-        this.isCheck = gs.isCheck;
-        this.isMate = gs.isMate;
-        this.whitesTurn = gs.whitesTurn;
-        this.pieces = gs.pieces;
-        this.pieceGivingCheck = gs.pieceGivingCheck;
-        this.log = gs.logger;
+        this.setState(gs);
+        this.pastStates = new ArrayDeque(); // not saved!
     }
     // empty board for testing
     public Game(int any) {
         this.isCheck = false;
+        this.resolveCheck = true;
         this.isMate = false;
         this.whitesTurn = true;
-        this.checkResolved = false;
         this.pieces = new ArrayList(32);
-        this.pieceGivingCheck = null;
+        this.lastMovedPiece = null;
         this.log = new Logkeeper();
     }
     
     public ArrayList<Piece> getPieces() { return this.pieces; }
     public boolean isCheck() { return this.isCheck; }
+    public boolean resolveCheck() { return this.resolveCheck; }
     public boolean isMate() { return this.isMate; }
     public boolean isWhitesTurn() { return this.whitesTurn; }
-    public Piece whoGivesACheck() { return this.pieceGivingCheck; }
+    public Piece lastMovedPiece() { return this.lastMovedPiece; }
     protected void changeTurn() { this.whitesTurn = !(this.whitesTurn); }
-    protected void setCheck(boolean isCheck) { this.isCheck = isCheck; }
+    public void setResolveCheck(boolean set) { this.resolveCheck = set; }
     /**
      * Initializes all pieces at opening position.
      */
     private void positionPieces() {
         // pawns
         for (int i=1; i<=8; i++) {
-            Pawn w = new Pawn(i, 2, true, this);
-            Pawn b = new Pawn(i, 7, false, this);
+            Pawn w = new Pawn(i, i, 2, true, this);
+            Pawn b = new Pawn(i+8, i, 7, false, this);
             this.addPiece(w);
             this.addPiece(b);
         }
         // knights
-        this.addPiece("Knight", new Square(2,1), true);
-        this.addPiece("Knight", new Square(2,8), false);
-        this.addPiece("Knight", new Square(7,1), true);
-        this.addPiece("Knight", new Square(7,8), false);
+        this.addPiece("Knight", 17, new Square(2,1), true);
+        this.addPiece("Knight", 18, new Square(2,8), false);
+        this.addPiece("Knight", 19, new Square(7,1), true);
+        this.addPiece("Knight", 20, new Square(7,8), false);
         // bishops
-        this.addPiece("Bishop", new Square(3,1), true);
-        this.addPiece("Bishop", new Square(3,8), false);
-        this.addPiece("Bishop", new Square(6,1), true);
-        this.addPiece("Bishop", new Square(6,8), false);
+        this.addPiece("Bishop", 21, new Square(3,1), true);
+        this.addPiece("Bishop", 22, new Square(3,8), false);
+        this.addPiece("Bishop", 23, new Square(6,1), true);
+        this.addPiece("Bishop", 24, new Square(6,8), false);
         // rooks
-        this.addPiece("Rook", new Square(1,1), true);
-        this.addPiece("Rook", new Square(1,8), false);
-        this.addPiece("Rook", new Square(8,1), true);
-        this.addPiece("Rook", new Square(8,8), false);
+        this.addPiece("Rook", 25, new Square(1,1), true);
+        this.addPiece("Rook", 26, new Square(1,8), false);
+        this.addPiece("Rook", 27, new Square(8,1), true);
+        this.addPiece("Rook", 28, new Square(8,8), false);
         // queens
-        this.addPiece("Queen", new Square(4,1), true);
-        this.addPiece("Queen", new Square(4,8), false);
+        this.addPiece("Queen", 29, new Square(4,1), true);
+        this.addPiece("Queen", 30, new Square(4,8), false);
         // kings
-        this.addPiece("King", new Square(5,1), true);
-        this.addPiece("King", new Square(5,8), false);
+        this.addPiece("King", 31, new Square(5,1), true);
+        this.addPiece("King", 32, new Square(5,8), false);
     }
-    private void updateCheck(Piece lastMovedPiece) {
-        if (this.isCheck == false) {
-            Square[] nextTurnMoves = lastMovedPiece.possibleMoves();
-            for (Square nextMove : nextTurnMoves) {
-                if (this.whoIsAt(nextMove) instanceof King) {
-                    this.isCheck = true;
-                    this.pieceGivingCheck = lastMovedPiece;
-                    System.out.println("Game checked");
-                }
-            }
-        } else { // if game was in check and a move was made, it resolved it
+    /**
+     * Check if opponent is in check
+     */
+    private void updateCheck() {
+        Square kingSquare = null;
+        for(Piece p : this.getPieces()) {
+            if ((p instanceof King) && 
+                    (p.getColor() == !(this.isWhitesTurn()))) {
+                kingSquare = p.getSquare();
+            } 
+        }
+        Piece[] temp = this.whoCanMoveHere(kingSquare);
+        if (this.whoCanMoveHere(kingSquare).length > 0) {
+            this.isCheck = true;
+            System.out.println("Game checked");
+        } else {
             this.isCheck = false;
-            this.checkResolved = false;
-            System.out.println("Check resolved");
         }
     }
-    private void areVictoryConditionsMet(Piece lastMovedPiece) {
-        System.out.println("victoryconditions called");
+    private boolean areVictoryConditionsMet() {
         if (this.isCheck == true) {
             boolean victory = true;
             for (Piece p : this.pieces) {
-                System.out.println(p);
                 if (p.possibleMoves().length != 0) {
                     victory = false;
                     System.out.println("no victory");
                 }
             }
-            if (victory) {
-                this.isMate = true;
-                String winner = !(lastMovedPiece.getColor()) ? 
-                        "black" : "white";
-                System.out.println("Game over! Winner: " +winner);
-            }
+            if (victory == true) this.isMate = true;
+            return victory;
+        }
+        return false;
+    }
+    
+    private void gameOver() {
+        String winner = this.lastMovedPiece.getColor() ? 
+                "white" : "black";
+        System.out.println("Game over! Winner: " +winner);
+    }
+    private void takeSnapshot() {
+        this.pastStates.addFirst(new GameState());
+    }
+    public void undo() {
+        if (this.pastStates.peek() != null) {
+            System.out.println("undo");
+            this.setState(this.pastStates.poll());
         }
     }
-    // there might be a better way to do this
+    private void setState(GameState gs) {
+        this.isCheck = gs.isCheck;
+        this.isMate = gs.isMate;
+        this.whitesTurn = gs.whitesTurn;
+        this.pieces = gs.pieces;
+        this.lastMovedPiece = gs.lastMovedPiece;
+        this.log = gs.logger;
+    }
+    /**
+     * Promotes a pawn if on the right rank at the opposing side.
+     * @param p Pawn to promote
+     * @return Queen piece
+     */
+    private Piece promotePawn(Piece p) {
+        if (!(p instanceof Pawn)) return p;
+        boolean color = p.getColor();
+        Square sq = p.getSquare();
+        if ((sq.rk() == 0) && (color == false) ||
+            (sq.rk() == 8) && (color == true)) {
+            
+            int idNum = 0;
+            for (Piece k : this.pieces) {
+                idNum = Math.max(idNum, k.pieceID);
+            }
+            idNum += 1;
+            
+            this.pieces.remove(p);
+            p = this.addPiece("Queen", idNum, sq, color);
+        }
+        return p;
+    }
     /**
      * Adds a piece to the chessboard. Makes sure that square is valid and
      * not occupied.
@@ -126,26 +168,26 @@ public class Game {
      * @param color True for white, false for black
      * @return true for success
      */
-    public boolean addPiece(String className, Square s, 
+    public Piece addPiece(String className, int pieceID, Square s, 
                             boolean color) {
         Class c; 
         Constructor co; 
         Piece newPiece;
         try {
             c = Class.forName("duchess.logic." + className);
-            co = c.getConstructor(int.class, int.class, 
+            co = c.getConstructor(int.class, int.class, int.class, 
                                   boolean.class, Game.class);
             if (this.whoIsAt(s) != null) {
                 throw new Exception("Square occupied");
             }
-            newPiece = (Piece)co.newInstance(s.fl(), s.rk(),
+            newPiece = (Piece)co.newInstance(pieceID, s.fl(), s.rk(),
                                              color, this);
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            return null;
         }
         this.pieces.add(newPiece);
-        return true;
+        return newPiece;
     }
     /**
      * Adds an existing Piece to the chessboard.
@@ -154,15 +196,6 @@ public class Game {
      */
     public boolean addPiece(Piece p) {
         return this.pieces.add(p);
-    }
-    /**
-     * Alternative for move(Piece p, Square square).
-     * @param pieceIndex The index of the Piece in array Game.pieces
-     * @param square Square to move to.
-     * @return see move(Piece p, Square square)
-     */
-    public boolean move(int pieceIndex, Square square) {
-        return this.move(this.pieces.get(pieceIndex), square);
     }
     /**
      * Moves a piece on the chessboard. If the input move is legal, the
@@ -177,21 +210,36 @@ public class Game {
     public boolean move(Piece p, Square square) {
         if (p == null) return false;
         Square[] possibleMoves = p.possibleMoves();
+        p = this.refreshPieceReference(p);
         for(Square move : possibleMoves) {
             if (square.equals(move)) {
+                this.takeSnapshot();
                 Piece toBeCaptured = this.whoIsAt(move); 
                 if (toBeCaptured != null) {
-                    pieces.remove(toBeCaptured); // can't capture own - illegal move
+                    pieces.remove(toBeCaptured);
                 }
                 this.log.add(p, p.getSquare(), move);
+                Square prevSq = p.getSquare();
                 p.changePos(move.fl(), move.rk());
-                this.updateCheck(p);
+                //p = this.promotePawn(p);
+                this.lastMovedPiece = p;
+                this.updateCheck();
                 this.changeTurn();
-                this.areVictoryConditionsMet(p);
+                boolean victory = this.areVictoryConditionsMet();
+                if (victory==true) gameOver();
+                System.out.println("Move " + prevSq + "->" +move);
                 return true;
             }
         }
         return false;
+    }
+    public boolean move(int pieceIndex, Square square) {
+        return this.move(this.pieces.get(pieceIndex), square);
+    }
+    public Piece refreshPieceReference(Piece p) {
+        if (p == null) return null;
+        int ID = p.pieceID;
+        return this.hasID(ID);
     }
     /**
      * Return the piece occupying a Square.
@@ -219,12 +267,12 @@ public class Game {
      */
     public Piece[] whoCanMoveHere(Square s, boolean opponent, 
             boolean excludeKings) {
-        boolean checkedAtBeginning = this.isCheck;
+        // pretend it's opponent's turn
         if (opponent==true) {
             this.changeTurn();
-            this.setCheck(false);
         }
         ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
+        
         if (excludeKings == true) {
             for(Piece p : piecesCopy) {
                 if (p instanceof King) piecesCopy.remove(p);
@@ -236,14 +284,13 @@ public class Game {
             for (Square move : possibleMoves) {
                 if(move.equals(s)) {
                     list.add(p);
-                    System.out.println(p);
+                    System.out.println("Who can move to " + s + "called, " + p);
                 }
             }
-        }      
+        }
+        // stop pretending
         if (opponent==true) {
-            this.whitesTurn = !(this.whitesTurn);
-            this.isCheck = checkedAtBeginning;
-        
+            this.changeTurn();
         }
         Piece[] result = list.toArray(new Piece[list.size()]);
         return result;
@@ -251,22 +298,25 @@ public class Game {
     public Piece[] whoCanMoveHere(Square s) {
         return whoCanMoveHere(s, false, false);
     }
+    public Piece hasID(int i) {
+        Piece result = null;
+        for (Piece p : this.pieces) {
+            if (p.pieceID == i) result = p;
+        }
+        return result;
+    }
     public void listPieces() {
         for (Piece p : this.pieces) {
             System.out.println(p);
         }
     }
-    public boolean isValidSquare(Square s) {
-        return s.isValid();
+    public void loadGame() {
     }
-    public Square[] possibleMoves(int pieceIndex) {
-        return pieces.get(pieceIndex).possibleMoves();
-    }
-    public Square[] possibleMoves(Piece p) {
-        return p.possibleMoves();
-    }
-    public GameState getGameState() {
-        return new GameState();
+    public boolean saveGame(String filePath) {
+        SaveManager sm = new SaveManager();
+        sm.setPath(filePath);
+        sm.write();
+        return true;
     }
     /**
      * Fully describes the state of the game.
@@ -275,16 +325,41 @@ public class Game {
         public ArrayList<Piece> pieces;
         public Logkeeper logger;
         public boolean isCheck;
+        public boolean resolveCheck;
         public boolean isMate;
         public boolean whitesTurn;
-        public Piece pieceGivingCheck;
+        public Piece lastMovedPiece;
+        /**
+         * Copies the current state of the game.
+         */
         public GameState() {
-            this.pieces = getPieces();
+            this.pieces = new ArrayList<Piece>();
+            for (Piece p : getPieces()) {
+                Piece n = this.copyPiece(p);
+                this.pieces.add(n);
+            }
             this.logger = log;
             this.isCheck = isCheck();
+            this.resolveCheck = resolveCheck();
             this.isMate = isMate();
             this.whitesTurn = isWhitesTurn();
-            this.pieceGivingCheck = whoGivesACheck();
+          
+            Piece p = lastMovedPiece();
+            Piece n = this.copyPiece(p);
+            this.lastMovedPiece = n;
+        }
+        public Piece copyPiece(Piece p) {
+            Piece n = null;
+            if (p != null) {
+                Class c = p.getClass();
+                try {
+                    Constructor co = c.getConstructor(c);
+                    n = (Piece) co.newInstance(p);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+            return n;
         }
     }
 }
