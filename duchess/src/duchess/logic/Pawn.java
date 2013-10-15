@@ -47,6 +47,7 @@ public class Pawn extends Piece {
                 new Square(this.file-1, this.rank-1)
             };
         }
+        int colorModifier = this.color ? 1 : -1;
         // can't move to square if ...
         for (Square s : initialMoves) {
             // move outside the board
@@ -56,8 +57,19 @@ public class Pawn extends Piece {
             } else if((myGame.whoIsAt(s) != null) && 
                       (s.fl() == this.file)) {
                 continue;
+            // the square is two steps ahead and there's a piece in between
+            } else if((myGame.whoIsAt(new Square(
+                    this.file, s.rk()-(1*colorModifier))) != null) && 
+                      (myGame.whoIsAt(new Square(
+                    this.file, s.rk()-(2*colorModifier))) == this)) {
+                continue;
             // diagonal squares are not occupied
             } else if((myGame.whoIsAt(s) == null) &&
+                      (s.fl() != this.file)) {
+                continue;
+            // diagonal squares are occupied by own color
+            } else if((myGame.whoIsAt(s) != null) &&
+                      (myGame.whoIsAt(s).color == this.color) &&
                       (s.fl() != this.file)) {
                 continue;
             // square is two paces ahead unless at rank 2 for white

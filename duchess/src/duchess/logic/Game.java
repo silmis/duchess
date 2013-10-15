@@ -2,6 +2,7 @@ package duchess.logic;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.lang.reflect.Constructor;
+import java.util.Iterator;
 
 public class Game {
     private boolean isCheck;
@@ -23,11 +24,6 @@ public class Game {
         this.log = new Logkeeper();
         this.pastStates = new ArrayDeque();
         this.positionPieces();
-    }
-    // load previous game
-    public Game(GameState gs) {
-        this.setState(gs);
-        this.pastStates = new ArrayDeque(); // not saved!
     }
     // empty board for testing
     public Game(int any) {
@@ -146,19 +142,61 @@ public class Game {
         if (!(p instanceof Pawn)) return p;
         boolean color = p.getColor();
         Square sq = p.getSquare();
-        if ((sq.rk() == 0) && (color == false) ||
+        if ((sq.rk() == 1) && (color == false) ||
             (sq.rk() == 8) && (color == true)) {
             
-            int idNum = 0;
+            int newIDNum = 0;
             for (Piece k : this.pieces) {
-                idNum = Math.max(idNum, k.pieceID);
+                newIDNum = Math.max(newIDNum, k.pieceID);
             }
-            idNum += 1;
+            newIDNum += 1;
             
             this.pieces.remove(p);
-            p = this.addPiece("Queen", idNum, sq, color);
+            p = this.addPiece("Queen", newIDNum, sq, color);
         }
         return p;
+    }
+    /**
+     * Updates the status of a possible en passant move. If the move can
+     * be done, changes the corresponding attribute in the right pawn.
+     * @return The piece capable of en passant, and if none, null.
+     */
+    private Piece updateEnPassant() {
+        for (Piece p : this.pieces) {
+            if (p instanceof Pawn) {
+                Pawn pw = (Pawn) p;
+                if (pw.getEnPassant() != null) {
+                    pw.setEnPassant(null);
+                    return pw;
+                }
+            }
+        }
+        Piece p = this.lastMovedPiece;
+        Square prevSq = this.log.lastMove().getStart();
+        
+        if (!(p instanceof Pawn)) return null;
+        if (Math.abs(p.getRank() - prevSq.rk()) != 2) return null;
+        
+        Piece enemy1 = this.whoIsAt(new Square(p.getFile() + 1, p.getRank()));
+        Piece enemy2 = this.whoIsAt(new Square(p.getFile() - 1, p.getRank()));
+        
+        Piece[] enemies = new Piece[2];
+        if ((enemy1 != null) && (enemy1.getColor() != p.getColor())) 
+            enemies[0] = enemy1;
+        if ((enemy2 != null) && (enemy2.getColor() != p.getColor())) 
+            enemies[1] = enemy2;
+        
+        int colorModifier = (p.getColor()) ? 1 : -1;
+        
+        for (Piece enemy : enemies) {
+            if (enemy instanceof Pawn) {
+                Pawn pw = (Pawn) enemy;
+                pw.setEnPassant(new Square(
+                        p.getFile(), 
+                        p.getRank()-(1*colorModifier)));
+            }
+        }
+        return null;
     }
     /**
      * Adds a piece to the chessboard. Makes sure that square is valid and
@@ -220,42 +258,19 @@ public class Game {
                 }
                 this.log.add(p, p.getSquare(), move);
                 p.changePos(move.fl(), move.rk());
-                //p = this.promotePawn(p);
+                p = this.promotePawn(p);
                 this.lastMovedPiece = p;
                 this.updateCheck();
                 
-                // lol cleanup
-                Square prevSq = this.log.lastMove().getStart();
-                if ((p instanceof Pawn) && (p.getRank() - prevSq.rk() == 2)) {
-                    if (p.getColor() == true) {
-                        Square pos1 = new Square(p.getFile()+1, p.getRank()-1);
-                        Square pos2 = new Square(p.getFile()-1, p.getRank()-1);
-                        Piece p1 = this.whoIsAt(pos1);
-                        Piece p2 = this.whoIsAt(pos2);
-                        Square enPassantSq = new Square(p.getFile(), p.getRank()-1);
-                        if ((p1 instanceof Pawn) && (p1.getColor()==false)) {
-                            Pawn p1p = (Pawn)p1;
-                            p1p.setEnPassant(enPassantSq);
-                        } else if ((p2 instanceof Pawn) && (p2.getColor()==false)) {
-                            Pawn p2p = (Pawn)p2;
-                            p2p.setEnPassant(enPassantSq);
-                        }
-                    }
-                    if (p.getColor() == false) {
-                        Square pos3 = new Square(p.getFile()+1, p.getRank()+1);
-                        Square pos4 = new Square(p.getFile()-1, p.getRank()+1);
-                        Piece p3 = this.whoIsAt(pos3);
-                        Piece p4 = this.whoIsAt(pos4);
-                        Square enPassantSq2 = new Square(p.getFile(), p.getRank()+1);
-                        if ((p3 instanceof Pawn) && (p3.getColor()==true)) {
-                            Pawn p3p = (Pawn)p3;
-                            p3p.setEnPassant(enPassantSq2);
-                        } else if ((p4 instanceof Pawn) && (p4.getColor()==true)) {
-                            Pawn p4p = (Pawn)p4;
-                            p4p.setEnPassant(enPassantSq2);
-                        }
-                    }
+                Piece enPassant = this.updateEnPassant();
+                if (enPassant == p) {
+                    int colorMod = p.getColor() ? 1 : -1;
+                    pieces.remove(
+                            this.whoIsAt(new Square(
+                            p.getFile(), 
+                            p.getRank()-(1*colorMod))));
                 }
+                    
                 this.changeTurn();
                 boolean victory = this.areVictoryConditionsMet();
                 if (victory==true) gameOver();
@@ -269,6 +284,11 @@ public class Game {
     public boolean move(int pieceIndex, Square square) {
         return this.move(this.pieces.get(pieceIndex), square);
     }
+    /**
+     * Gets the current reference to piece based on ID.
+     * @param p Reference to old piece.
+     * @return Updated reference to piece.
+     */
     public Piece refreshPieceReference(Piece p) {
         if (p == null) return null;
         int ID = p.pieceID;
@@ -307,9 +327,14 @@ public class Game {
         ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
         
         if (excludeKings == true) {
-            for(Piece p : piecesCopy) {
-                if (p instanceof King) piecesCopy.remove(p);
+            Iterator<Piece> iter = piecesCopy.iterator();
+            while(iter.hasNext()) {
+                Piece p = iter.next();
+                if (p instanceof King) iter.remove();
             }
+            /*for(Piece p : piecesCopy) {
+                if (p instanceof King) piecesCopy.remove(p);
+            }*/
         }
         ArrayList<Piece> list = new ArrayList();
         for (Piece p : piecesCopy) {

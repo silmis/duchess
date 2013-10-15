@@ -10,11 +10,11 @@
  * DONE format for listPieces()
  *      - maybe list white and black separately
  *      NO - should be readable to both human and computer?
- * save game
+ * NO - save game -
  *      - use memento pattern!
  *      - then pickle?
  *      - best if state object can be provided as parameter to game constructor
- * history
+ * DONE history
  *      DONE - probably pairs of Squares, maybe make a class
  *      DONE - enough info to reconstruct entire game? should be
  * DONE victory conditions
@@ -30,7 +30,7 @@
         DONE - problem: how to iterate through squares and find out if they truly
           "block" a piece. idea: create "phantom" pieces to represent possible
           situations. might be useful in the future?
- * special moves: en passant
+ * DONE special moves: en passant
  *      - if pawn moves FROM rank 7 or 2 TWO steps AND opponent in file+-1 
  *        and rank 5 or 4, in the next turn opponent has a special legal move...
  *        (separate for black and white)
@@ -41,8 +41,8 @@
  *        rook moves to file 6 or 4. represented as two successive
  *        same-colour moves?
  * DONE fix pawn possible moves (showns taking own as possible)
- * logkeeper now screwed. it may be redundant.
- * NOT WORKING Pawn promotion!!
+ * FIXED logkeeper now screwed. it may be redundant.
+ * DONE Pawn promotion!!
  */
 
 nice-to have:
@@ -52,3 +52,6 @@ nice-to have:
  *      - split pieces? to find "all white pieces", have to iterate all
  * maybe make a method that finds pieces of particular color
  * some set algebraic functions for pieces and squares, union, intersection etc.
+
+FIX:
+DONE en passant recognizing own pieces as well
