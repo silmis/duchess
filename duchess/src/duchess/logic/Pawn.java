@@ -10,12 +10,18 @@ import java.util.ArrayList;
  * @author thitkone
  */
 public class Pawn extends Piece {
+    
+    private Square enPassant = null;
+    
     public Pawn(int pieceID, int file, int rank, boolean color, Game myGame) {
         super(pieceID, file, rank, color, myGame);
     }
     public Pawn(Pawn p) {
         super(p.pieceID, p.file, p.rank, p.color, p.myGame);
     }
+    public Square getEnPassant() { return this.enPassant; }
+    public void setEnPassant(Square s) { this.enPassant = s; }
+    
     public Square[] possibleMoves() {
         Square[] initialMoves;
         ArrayList<Square> legalMoves = new ArrayList();
@@ -69,6 +75,8 @@ public class Pawn extends Piece {
                 legalMoves.add(s);
             }   
         }
+        if (this.enPassant != null) legalMoves.add(enPassant);
+         
         if ((myGame.isCheck() == true) && (myGame.resolveCheck() == true) &&
                 (this.color == myGame.isWhitesTurn())) {
             myGame.setResolveCheck(false);
@@ -78,5 +86,4 @@ public class Pawn extends Piece {
         Square[] result = legalMoves.toArray(new Square[legalMoves.size()]);
         return result;
     }
-    
 }

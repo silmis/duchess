@@ -219,15 +219,48 @@ public class Game {
                     pieces.remove(toBeCaptured);
                 }
                 this.log.add(p, p.getSquare(), move);
-                Square prevSq = p.getSquare();
                 p.changePos(move.fl(), move.rk());
                 //p = this.promotePawn(p);
                 this.lastMovedPiece = p;
                 this.updateCheck();
+                
+                // lol cleanup
+                Square prevSq = this.log.lastMove().getStart();
+                if ((p instanceof Pawn) && (p.getRank() - prevSq.rk() == 2)) {
+                    if (p.getColor() == true) {
+                        Square pos1 = new Square(p.getFile()+1, p.getRank()-1);
+                        Square pos2 = new Square(p.getFile()-1, p.getRank()-1);
+                        Piece p1 = this.whoIsAt(pos1);
+                        Piece p2 = this.whoIsAt(pos2);
+                        Square enPassantSq = new Square(p.getFile(), p.getRank()-1);
+                        if ((p1 instanceof Pawn) && (p1.getColor()==false)) {
+                            Pawn p1p = (Pawn)p1;
+                            p1p.setEnPassant(enPassantSq);
+                        } else if ((p2 instanceof Pawn) && (p2.getColor()==false)) {
+                            Pawn p2p = (Pawn)p2;
+                            p2p.setEnPassant(enPassantSq);
+                        }
+                    }
+                    if (p.getColor() == false) {
+                        Square pos3 = new Square(p.getFile()+1, p.getRank()+1);
+                        Square pos4 = new Square(p.getFile()-1, p.getRank()+1);
+                        Piece p3 = this.whoIsAt(pos3);
+                        Piece p4 = this.whoIsAt(pos4);
+                        Square enPassantSq2 = new Square(p.getFile(), p.getRank()+1);
+                        if ((p3 instanceof Pawn) && (p3.getColor()==true)) {
+                            Pawn p3p = (Pawn)p3;
+                            p3p.setEnPassant(enPassantSq2);
+                        } else if ((p4 instanceof Pawn) && (p4.getColor()==true)) {
+                            Pawn p4p = (Pawn)p4;
+                            p4p.setEnPassant(enPassantSq2);
+                        }
+                    }
+                }
                 this.changeTurn();
                 boolean victory = this.areVictoryConditionsMet();
                 if (victory==true) gameOver();
-                System.out.println("Move " + prevSq + "->" +move);
+                //this.log.print();
+                //System.out.println("Move " + prevSq + "->" +move);
                 return true;
             }
         }
@@ -284,7 +317,7 @@ public class Game {
             for (Square move : possibleMoves) {
                 if(move.equals(s)) {
                     list.add(p);
-                    System.out.println("Who can move to " + s + "called, " + p);
+                    //System.out.println("Who can move to " + s + "called, " + p);
                 }
             }
         }
@@ -338,7 +371,7 @@ public class Game {
                 Piece n = this.copyPiece(p);
                 this.pieces.add(n);
             }
-            this.logger = log;
+            this.logger = new Logkeeper(log);
             this.isCheck = isCheck();
             this.resolveCheck = resolveCheck();
             this.isMate = isMate();

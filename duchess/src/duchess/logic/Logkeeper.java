@@ -11,10 +11,16 @@ import java.util.ArrayList;
  * @author thitkone
  */
 public class Logkeeper {
-    ArrayList<Move> log = new ArrayList(); 
-    
-    public void add(Piece piece, Square start, Square target) {
-        Move m = new Move(piece, start, target);
+    private ArrayList<Move> log;
+    public Logkeeper() {
+        this.log = new ArrayList<Move>();
+    }
+    public Logkeeper(Logkeeper old) {
+        this.log = (ArrayList<Move>) old.log.clone();
+    }
+    public Move lastMove() { return this.log.get( this.log.size()-1 ); }
+    public void add(Piece p, Square start, Square target) {
+        Move m = new Move(p, start, target);
         log.add(m);
     }
     public boolean remove(int index) {
@@ -26,9 +32,10 @@ public class Logkeeper {
         return true;
     }
     public boolean hasMoved(Piece p) {
+        int pid = p.pieceID;
         boolean moved = false;
         for (Move m : log) {
-            if (m.piece == p) {
+            if (m.pieceID == pid) {
                 moved = true;
             }
         }
@@ -36,21 +43,23 @@ public class Logkeeper {
     }
     public void print() {
         for (Move m : log) {
-            String className = m.piece.getClass().toString();
+            /*String className = m.piece.getClass().toString();
             String[] splitted = className.split("\\.");
             className = splitted[splitted.length-1];
-            String color = m.piece.getColor() ? "White" : "Black";
-            System.out.println(color + " " + className + " " + m.getStart() + 
+            String color = m.piece.getColor() ? "White" : "Black";*/
+            System.out.println(m.color + " " + m.pieceID + " " + m.getStart() + 
                     " -> " + m.getTarget());
         }
     }
    
-    private class Move {
-        private Piece piece;
+    public class Move {
+        private int pieceID;
+        private boolean color;
         private Square start;
         private Square target;
-        private Move(Piece piece, Square start, Square target) {
-            this.piece = piece;
+        private Move(Piece p, Square start, Square target) {
+            this.pieceID = p.pieceID;
+            this.color = p.getColor();
             this.start = start;
             this.target = target;
         }
