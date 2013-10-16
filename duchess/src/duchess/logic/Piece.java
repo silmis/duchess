@@ -4,6 +4,7 @@
  */
 package duchess.logic;
 import java.util.ArrayList;
+import java.util.Iterator;
 /**
  *
  * @author thitkone
@@ -105,6 +106,19 @@ public abstract class Piece {
         return this.findConsecutiveSquares(modifiers, length);
     }
     /**
+     * Shorthand for finding position of the king.
+     * @return Square the king is in.
+     */
+    private Square kingSquare() {
+        for(Piece p : myGame.getPieces()) {
+            if ((p instanceof King) && 
+                    (p.getColor() == myGame.isWhitesTurn())) {
+                return p.getSquare();
+            } 
+        }
+        return null;
+    }
+    /**
      * Find squares which resolve a check. When the game is in check, the
      * only legal moves for pieces other than the king are those that
      * are able to block the piece that is giving check.
@@ -114,15 +128,9 @@ public abstract class Piece {
     protected ArrayList<Square> squaresToResolveCheck(
             ArrayList<Square> moves) {
         
-        Square kingSquare = null;
-        for(Piece p : myGame.getPieces()) {
-            if ((p instanceof King) && 
-                    (p.getColor() == myGame.isWhitesTurn())) {
-                kingSquare = p.getSquare();
-            } 
-        }
-        
+        Square kingSquare = this.kingSquare();
         ArrayList<Square> resolvingSquares = new ArrayList();
+        
         for (Square myMove : moves) {
  
             // pretend it's opponent's turn
@@ -153,6 +161,28 @@ public abstract class Piece {
             }
         }
         return resolvingSquares;
+    }
+    /**
+     * Returns moves which will not result in check.
+     * @param moves
+     * @return 
+     */
+    protected ArrayList<Square> willResultInCheck(ArrayList <Square> moves) {
+        Iterator<Square> iter = moves.iterator();
+        Square kingSquare = this.kingSquare();
+        while(iter.hasNext()) {
+            Square sq = iter.next();
+            boolean success = myGame.move(this, sq);
+            if (success) {
+                Piece[] enemies = myGame.whoCanMoveHere(kingSquare, false, true);
+                myGame.undo();
+                if (enemies.length > 0) iter.remove();
+            } else {
+                System.out.println("can't move to " + sq);
+            }
+            
+        }
+        return moves;
     }
     public String toString() {
         String className = this.getClass().toString();

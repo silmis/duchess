@@ -19,7 +19,7 @@ public class Knight extends Piece {
     }
     public Square[] possibleMoves() {
         ArrayList<Square> initialMoves = new ArrayList();
-        ArrayList<Square> legalMoves = new ArrayList();
+        ArrayList<Square> moves = new ArrayList();
         
         if(isItMyTurn() == false) return new Square[0];
         
@@ -41,17 +41,22 @@ public class Knight extends Piece {
                        (occupier.getColor() == this.color)) {
                 continue;
             } else {
-                legalMoves.add(s);
+                moves.add(s);
             }
         }
         
-        if ((myGame.isCheck() == true) && (myGame.resolveCheck() == true) &&
+        /*if (myGame.nextMoveCheckGuard()) {
+            myGame.setNextMoveCheckGuard(false);
+            moves = this.willResultInCheck(moves);
+            myGame.setNextMoveCheckGuard(true);
+        }*/
+        if (myGame.isCheck() && myGame.resolveCheckGuard() &&
                 (this.color == myGame.isWhitesTurn())) {
-            myGame.setResolveCheck(false);
-            legalMoves = this.squaresToResolveCheck(legalMoves);
-            myGame.setResolveCheck(true);
+            myGame.setResolveCheckGuard(false);
+            moves = this.squaresToResolveCheck(moves);
+            myGame.setResolveCheckGuard(true);
         }
-        Square[] result = legalMoves.toArray(new Square[legalMoves.size()]);
+        Square[] result = moves.toArray(new Square[moves.size()]);
         return result;
     }
     

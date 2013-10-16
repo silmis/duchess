@@ -89,7 +89,7 @@ public class Board extends JComponent {
             if (success == true) {
                 this.updatePiecePositions();
                 this.unSelectPiece();
-                if (game.isMate()) {
+                if (game.areVictoryConditionsMet()) {
                     this.victory();
                 }
             } else {
@@ -131,8 +131,12 @@ public class Board extends JComponent {
         }
     }
     private void victory() {
-        String winner = !(game.isWhitesTurn()) ? 
-                "white" : "black";
-        JOptionPane.showMessageDialog(null, "Game over, winner is: " + winner);
+        if (game.isMate()) {
+            String winner = !(game.isWhitesTurn()) ? 
+                    "white" : "black";
+            JOptionPane.showMessageDialog(null, "Game over, winner is: " + winner);
+        } else {
+            JOptionPane.showMessageDialog(null, "Game over, it's a draw!");
+        }
     }
 }

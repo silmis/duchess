@@ -23,7 +23,15 @@
  * DONE check & mate:
  *      DONE - game is check if opponent moves a piece and in the new position king is threatened
  * make illegal: player moves and exposes one's king to a threat by opponent
- * games can be drawn!!
+ * games can be drawn:
+    "Draws are codified by various rules of chess including stalemate 
+    (when the player to move has no legal move and is not in check), 
+    threefold repetition (when the same position occurs three times with the 
+    same player to move), and the fifty-move rule (when the last fifty 
+    successive moves made by both players contain no capture or pawn move). 
+    A draw also occurs when neither player has sufficient material to 
+    checkmate the opponent or when no sequence of legal moves can lead 
+    to checkmate."
  * DONE - which piece resolves check? "find square that if blocked
  *        results in opponent piece not being able to 
  *        move to king's square"
@@ -55,3 +63,7 @@ nice-to have:
 
 FIX:
 DONE en passant recognizing own pieces as well
+king can't escape check to a to-be threatened square
+game should draw when x moves repeat
+king can move to a square threatened by a pawn: pawn's diagonal moves are 
+    not counted unless there is a piece in them

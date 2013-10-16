@@ -24,7 +24,7 @@ public class Pawn extends Piece {
     
     public Square[] possibleMoves() {
         Square[] initialMoves;
-        ArrayList<Square> legalMoves = new ArrayList();
+        ArrayList<Square> moves = new ArrayList();
         
         if(isItMyTurn() == false) {
             return new Square[] {};
@@ -84,18 +84,22 @@ public class Pawn extends Piece {
                 continue;
             } else {
                 // move is legal
-                legalMoves.add(s);
+                moves.add(s);
             }   
         }
-        if (this.enPassant != null) legalMoves.add(enPassant);
-         
-        if ((myGame.isCheck() == true) && (myGame.resolveCheck() == true) &&
+        if (this.enPassant != null) moves.add(enPassant);
+        /*if (myGame.nextMoveCheckGuard()) {
+            myGame.setNextMoveCheckGuard(false);
+            moves = this.willResultInCheck(moves);
+            myGame.setNextMoveCheckGuard(true);
+        }*/
+        if (myGame.isCheck() && myGame.resolveCheckGuard() &&
                 (this.color == myGame.isWhitesTurn())) {
-            myGame.setResolveCheck(false);
-            legalMoves = this.squaresToResolveCheck(legalMoves);
-            myGame.setResolveCheck(true);
+            myGame.setResolveCheckGuard(false);
+            moves = this.squaresToResolveCheck(moves);
+            myGame.setResolveCheckGuard(true);
         }
-        Square[] result = legalMoves.toArray(new Square[legalMoves.size()]);
+        Square[] result = moves.toArray(new Square[moves.size()]);
         return result;
     }
 }

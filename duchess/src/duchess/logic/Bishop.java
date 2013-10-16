@@ -20,11 +20,16 @@ public class Bishop extends Piece {
     public Square[] possibleMoves() {
         if(isItMyTurn() == false) return new Square[0];
         ArrayList<Square> moves = this.findDiagonalSquares(8);
-        if ((myGame.isCheck() == true) && (myGame.resolveCheck() == true) &&
+        /*if (myGame.nextMoveCheckGuard()) {
+            myGame.setNextMoveCheckGuard(false);
+            moves = this.willResultInCheck(moves);
+            myGame.setNextMoveCheckGuard(true);
+        }*/
+        if (myGame.isCheck() && myGame.resolveCheckGuard() &&
                 (this.color == myGame.isWhitesTurn())) {
-            myGame.setResolveCheck(false);
+            myGame.setResolveCheckGuard(false);
             moves = this.squaresToResolveCheck(moves);
-            myGame.setResolveCheck(true);
+            myGame.setResolveCheckGuard(true);
         }
         Square[] result = moves.toArray(new Square[moves.size()]);
         return result;

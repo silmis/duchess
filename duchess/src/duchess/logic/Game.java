@@ -6,7 +6,8 @@ import java.util.Iterator;
 
 public class Game {
     private boolean isCheck;
-    private boolean resolveCheck;
+    private boolean resolveCheckGuard;
+    private boolean nextMoveCheckGuard;
     private boolean isMate;
     private boolean whitesTurn;
     private ArrayList<Piece> pieces;
@@ -16,7 +17,8 @@ public class Game {
 
     public Game() {
         this.isCheck = false;
-        this.resolveCheck = true;
+        this.resolveCheckGuard = true;
+        this.nextMoveCheckGuard = true;
         this.isMate = false;
         this.whitesTurn = true;
         this.pieces = new ArrayList(32);
@@ -28,7 +30,8 @@ public class Game {
     // empty board for testing
     public Game(int any) {
         this.isCheck = false;
-        this.resolveCheck = true;
+        this.resolveCheckGuard = true;
+        this.nextMoveCheckGuard = true;
         this.isMate = false;
         this.whitesTurn = true;
         this.pieces = new ArrayList(32);
@@ -38,12 +41,14 @@ public class Game {
     
     public ArrayList<Piece> getPieces() { return this.pieces; }
     public boolean isCheck() { return this.isCheck; }
-    public boolean resolveCheck() { return this.resolveCheck; }
+    public boolean resolveCheckGuard() { return this.resolveCheckGuard; }
+    public boolean nextMoveCheckGuard() { return this.nextMoveCheckGuard; }
     public boolean isMate() { return this.isMate; }
     public boolean isWhitesTurn() { return this.whitesTurn; }
     public Piece lastMovedPiece() { return this.lastMovedPiece; }
     protected void changeTurn() { this.whitesTurn = !(this.whitesTurn); }
-    public void setResolveCheck(boolean set) { this.resolveCheck = set; }
+    public void setResolveCheckGuard(boolean set) { this.resolveCheckGuard = set; }
+    public void setNextMoveCheckGuard(boolean set) { this.nextMoveCheckGuard = set; }
     /**
      * Initializes all pieces at opening position.
      */
@@ -96,28 +101,36 @@ public class Game {
             this.isCheck = false;
         }
     }
-    private boolean areVictoryConditionsMet() {
-        if (this.isCheck == true) {
-            boolean victory = true;
-            for (Piece p : this.pieces) {
-                if (p.possibleMoves().length != 0) {
-                    victory = false;
-                    System.out.println("no victory");
-                }
-            }
-            if (victory == true) this.isMate = true;
-            return victory;
-        }
-        return false;
-    }
-    
+   
     private void gameOver() {
-        String winner = this.lastMovedPiece.getColor() ? 
-                "white" : "black";
-        System.out.println("Game over! Winner: " +winner);
+        if (this.isCheck && this.isMate) {
+            String winner = this.lastMovedPiece.getColor() ? 
+                    "white" : "black";
+            System.out.println("Game over! Winner: " +winner);
+        } else {
+            System.out.println("Game over, it's a draw!");
+        }
     }
     private void takeSnapshot() {
         this.pastStates.addFirst(new GameState());
+    }
+    public boolean areVictoryConditionsMet() {
+        boolean end = true;
+        if (this.isCheck == true) {
+            for (Piece p : this.pieces) {
+                if (p.possibleMoves().length != 0) {
+                    end = false;
+                }
+            }
+            if (end == true) this.isMate = true;
+        } else {
+            for (Piece p : this.pieces) {
+                if (p.possibleMoves().length != 0) {
+                    end = false;
+                }
+            }
+        }
+        return end;
     }
     public void undo() {
         if (this.pastStates.peek() != null) {
@@ -127,6 +140,8 @@ public class Game {
     }
     private void setState(GameState gs) {
         this.isCheck = gs.isCheck;
+        this.resolveCheckGuard = gs.resolveCheckGuard;
+        this.nextMoveCheckGuard = gs.nextMoveCheckGuard;
         this.isMate = gs.isMate;
         this.whitesTurn = gs.whitesTurn;
         this.pieces = gs.pieces;
@@ -272,10 +287,10 @@ public class Game {
                 }
                     
                 this.changeTurn();
-                boolean victory = this.areVictoryConditionsMet();
-                if (victory==true) gameOver();
-                //this.log.print();
-                //System.out.println("Move " + prevSq + "->" +move);
+                boolean gameEnded = this.areVictoryConditionsMet();
+                if (gameEnded==true) gameOver();
+                Square prevSq = this.log.lastMove().getStart();
+                System.out.println("Move " + this.lastMovedPiece.getClass()+ " " + prevSq + "->" +move);
                 return true;
             }
         }
@@ -320,10 +335,9 @@ public class Game {
      */
     public Piece[] whoCanMoveHere(Square s, boolean opponent, 
             boolean excludeKings) {
-        // pretend it's opponent's turn
-        if (opponent==true) {
-            this.changeTurn();
-        }
+        
+        if (opponent==true) { this.changeTurn(); }
+        
         ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
         
         if (excludeKings == true) {
@@ -332,9 +346,6 @@ public class Game {
                 Piece p = iter.next();
                 if (p instanceof King) iter.remove();
             }
-            /*for(Piece p : piecesCopy) {
-                if (p instanceof King) piecesCopy.remove(p);
-            }*/
         }
         ArrayList<Piece> list = new ArrayList();
         for (Piece p : piecesCopy) {
@@ -342,14 +353,12 @@ public class Game {
             for (Square move : possibleMoves) {
                 if(move.equals(s)) {
                     list.add(p);
-                    //System.out.println("Who can move to " + s + "called, " + p);
                 }
             }
         }
-        // stop pretending
-        if (opponent==true) {
-            this.changeTurn();
-        }
+
+        if (opponent==true) { this.changeTurn(); }
+        
         Piece[] result = list.toArray(new Piece[list.size()]);
         return result;
     }
@@ -368,14 +377,6 @@ public class Game {
             System.out.println(p);
         }
     }
-    public void loadGame() {
-    }
-    public boolean saveGame(String filePath) {
-        SaveManager sm = new SaveManager();
-        sm.setPath(filePath);
-        sm.write();
-        return true;
-    }
     /**
      * Fully describes the state of the game.
      */
@@ -383,7 +384,8 @@ public class Game {
         public ArrayList<Piece> pieces;
         public Logkeeper logger;
         public boolean isCheck;
-        public boolean resolveCheck;
+        public boolean resolveCheckGuard;
+        public boolean nextMoveCheckGuard;
         public boolean isMate;
         public boolean whitesTurn;
         public Piece lastMovedPiece;
@@ -398,7 +400,8 @@ public class Game {
             }
             this.logger = new Logkeeper(log);
             this.isCheck = isCheck();
-            this.resolveCheck = resolveCheck();
+            this.resolveCheckGuard = resolveCheckGuard();
+            this.nextMoveCheckGuard = nextMoveCheckGuard();
             this.isMate = isMate();
             this.whitesTurn = isWhitesTurn();
           

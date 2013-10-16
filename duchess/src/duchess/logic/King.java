@@ -26,11 +26,11 @@ public class King extends Piece {
         // king can't move to an threatened square
         ArrayList<Square> moveCopy = new ArrayList<Square>(moves);
         for (Square move : moveCopy) {
-            myGame.setResolveCheck(false);
+            myGame.setResolveCheckGuard(false);
             if (myGame.whoCanMoveHere(move, true, true).length > 0) {
                 moves.remove(move);
             }
-            myGame.setResolveCheck(true);
+            myGame.setResolveCheckGuard(true);
         }
         Square[] result = moves.toArray(new Square[moves.size()]);
         return result;

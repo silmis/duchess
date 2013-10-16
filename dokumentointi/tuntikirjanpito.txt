@@ -26,3 +26,7 @@
 6.vko
 8.10. 10h ongelmia voittoehtojen kanssa. undo-toiminto.
 9.10. 4h shakki & matti saatu toimimaan, peliä voi pelata. puuttuu enää lähes kaikki toiminnallisuus mitä on luvattu.  
+
+7.vko
+15.10. 5h ohestalyönti ja nappuloiden korottaminen toimii
+16.10. 5h toistaiseksi tuloksetonta taistelua erilaisten laittomien siirtojen kanssa, tasapeli lisätty

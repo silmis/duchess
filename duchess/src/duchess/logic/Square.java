@@ -39,8 +39,8 @@ public class Square {
         return false;
     }
     /**
-     * Returns the Square's position in a 1-dimensional array where (1,1)
-     * is 0 and (8,8) is 63.
+     * Returns the Square's position in a flattened 1-dimensional array 
+     * where (1,1) is 0 and (8,8) is 63.
      * @return 
      */
     public int toIndex() {
