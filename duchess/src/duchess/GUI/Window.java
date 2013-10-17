@@ -5,10 +5,12 @@
 package duchess.GUI;
 import duchess.logic.Square;
 import duchess.logic.Game;
+import duchess.logic.Logkeeper;
 import duchess.logic.Piece;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 /**
  *
@@ -21,8 +23,11 @@ public class Window extends JFrame {
     private Game game;
     private Board board;
     private JPanel leftPane;
+    private JButton newGameButton;
     private JButton queryButton;
     private JButton undoButton;
+    private JButton quitButton;
+    protected JTextArea scoreBox;
     private Container container;
     
     public Window() {
@@ -52,7 +57,19 @@ public class Window extends JFrame {
         this.leftPane.setBorder(BorderFactory.createLineBorder(Color.black));
         container.add(this.leftPane);
         
+        this.newGameButton = new JButton("New game");
+        this.newGameButton.setPreferredSize(new Dimension(160,40));
+        this.newGameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                while(true) {
+                    boolean success = game.undo();
+                    if (!success) { break; }
+                    board.updatePiecePositions();
+                }
+            }
+        });
         this.queryButton = new JButton("Query Mode OFF");
+        this.queryButton.setPreferredSize(new Dimension(160,40));
         this.queryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 boolean on = board.toggleQuery();
@@ -62,16 +79,38 @@ public class Window extends JFrame {
             }
         });
         this.undoButton = new JButton("Undo move");
+        this.undoButton.setPreferredSize(new Dimension(160,40));
         this.undoButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 game.undo();
                 board.clearHighlight();
                 board.updatePiecePositions();
+                updateScoreBox();
+            }
+        });
+        this.scoreBox = new JTextArea();
+        this.scoreBox.setPreferredSize(new Dimension(160, 450));
+        this.quitButton = new JButton("Quit");
+        this.quitButton.setPreferredSize(new Dimension(160,40));
+        this.quitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
             }
         });
         
+        this.leftPane.add(this.newGameButton);
         this.leftPane.add(this.queryButton);
         this.leftPane.add(this.undoButton);
+        this.leftPane.add(this.scoreBox);
+        this.leftPane.add(this.quitButton);
+    }
+    public void updateScoreBox() {
+        ArrayList<Logkeeper.Move> moves = game.log.allMoves();
+        String scores = "";
+        for (Logkeeper.Move m : moves) {
+            scores += m.toString()+"\n";
+        }
+        this.scoreBox.setText(scores);
     }
     public Game getGame() { return this.game; }
 

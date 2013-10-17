@@ -49,15 +49,13 @@ public abstract class Piece {
         return false;
     }
     /**
-     * Finds all legal diagonal or orthogonal moves (Bishop, Rook, Queen & 
-     * King). Modifiers is an array of four (x,y) pairs of "weights" 
+     * Finds all legal diagonal or orthogonal moves (Bishop, Rook, 
+     * Queen & King). Modifiers is an array of four (x,y) pairs of "weights" 
      * which enable the same loop to be run for all four directions 
      * on the board. By choosing the modifiers accordingly, we get 
      * either diagonal or orthogonal consecutive squares. Length 
      * determines how many squares are explored at any direction (1 for 
-     * king, 8 to others). If edge of board is encountered, loop 
-     * breaks. If an occupied square is encountered, move is only legal if
-     * the piece occupying it is of opposite color.
+     * king, 8 to others).
      * Example of modifiers: see findDiagonalMoves() and 
      * findOrthogonalMoves()
      * 
@@ -167,7 +165,7 @@ public abstract class Piece {
      * @param moves
      * @return 
      */
-    protected ArrayList<Square> willResultInCheck(ArrayList <Square> moves) {
+    protected ArrayList<Square> willNotResultInCheck(ArrayList <Square> moves) {
         Iterator<Square> iter = moves.iterator();
         Square kingSquare = this.kingSquare();
         while(iter.hasNext()) {

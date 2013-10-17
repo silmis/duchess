@@ -46,7 +46,6 @@ public class MBishopTest {
     
     @Test
     // defeats the purpose of testing, but checked this manually to be true
-    // (writing a function for this is simply too time consuming)
     public void EmptyBoardListAllMoves() {
         gm = new Game(0); // no other pieces
         Square target = new Square(4,5);

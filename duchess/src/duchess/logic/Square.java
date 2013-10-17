@@ -5,7 +5,7 @@
 package duchess.logic;
 
 /**
- *
+ * Represents a square on the chessboard.
  * @author thitkone
  */
 public class Square {
@@ -47,6 +47,7 @@ public class Square {
         return ((this.rk()-1) * 8 + this.fl())-1;
     }
     public String toString() {
-        return "(" + this.file + "," + this.rank+")";
+        String chars = "ABCDEFGH";
+        return chars.charAt(this.file-1) + "" + this.rank;
     }
 }

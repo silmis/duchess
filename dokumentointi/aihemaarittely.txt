@@ -1,8 +1,9 @@
 Aihe: Shakki
+============
 Toteutetaan kahden käyttäjän yhdellä ruudulla pelattava shakkipeli ja tietokonevastustaja, joka pelaa arpomalla satunnaisen laillisen siirron pelilaudalla.
 
-Ohjelman pitää pystyä representoimaan pelialusta ja kuusi erilaista nappulatyyppiä, joiden instansseja voi olla laudalla mielivaltainen määrä (esim. sotilaan korottamisen seurauksena). Ohjelma pitää muistissa käynnissä olevan ottelun sen astisen historian, jossa voi liikkua eteen tai taaksepäin. Peli kykenee laskemaan kussakin tilanteessa jokaisen nappulan lailliset siirrot ja osaa ottaa huomioon erityistapaukset, kuten tornittamisen tai ohestalyönnin. Ottelun voi tallentaa ja avata myöhemmin. Kuten muissakin shakkiohjelmissa, perusperiaate on se, etteivät pelaajat voi "pelata väärin", vaan ohjelma pitää huolta sääntöjen noudattamisesta ja tunnistaa voittoehtojen (shakki ja matti) täyttymisen.
+Ohjelman pitää pystyä representoimaan pelialusta ja kuusi erilaista nappulatyyppiä, joiden instansseja voi olla laudalla mielivaltainen määrä (esim. sotilaan korottamisen seurauksena). Ohjelma pitää muistissa käynnissä olevan ottelun sen astisen historian, jossa voi liikkua taaksepäin undo-toiminnolla. Peli kykenee laskemaan kussakin tilanteessa jokaisen nappulan lailliset siirrot ja osaa ottaa huomioon erityistapaukset, kuten tornittamisen tai ohestalyönnin. Kuten muissakin shakkiohjelmissa, perusperiaate on se, etteivät pelaajat voi "pelata väärin", vaan ohjelma pitää huolta sääntöjen noudattamisesta ja tunnistaa voittoehtojen (shakki ja matti) täyttymisen.
 
-Ohjelma tulee olemaan laajennettavissa siten, että se voi toimia esim. jonkinlaisten shakki-tekoälyjen demoamisessa yksinkertaisella tavalla.
+Ohjelma on laajennettavissa siten, että se voi toimia jonkinlaisten shakki-tekoälyjen demoamisessa yksinkertaisella tavalla.
 
-Käyttäjät: Mitä moninaisimmat tietoa käsittelevät mekanismit, esim. ihmiset ja algoritmit
+Käyttäjät: Ihmiset ja algoritmit

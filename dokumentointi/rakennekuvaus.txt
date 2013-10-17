@@ -1,0 +1,10 @@
+Shakkipeli Duchess: rakennekuvaus
+=================================
+
+Pelin keskeisimmät luokat ovat Game, joka sisältää metodit pelin pelaamiselle ja abstrakti luokka Piece, josta löytyvät kaikkien nappuloiden yhteiset ominaisuudet ja metodit. Piece-luokan aliluokkia ovat kuusi nappulaluokkaa (Pawn, Knight, Bishop jne.), joilla on jokaisella oma versio metodista, joka joka määrittää nappuloiden lailliset siirrot.
+
+Apuluokkia ovat Square (yksittäinen pelilaudan ruutu) ja Logkeeper, jonka tehtävä on muistaa aiemmat siirrot ja tarjota metodit erilaisiin niitä koskeviin kyselyihin.
+
+Game-luokalla on sisäinen luokka GameState, joka instantioituessaan kopioi Game-luokasta kaikki attribuutit, jotka määrittävät pelin senhetkisen tilan. Game-luokalla on lisäksi GameState-olioista koostuva pinorakenne, jonne pelin tilat jokaisen onnistuneen siirron yhteydessä tallennetaan. Undo-metodi palauttaa Game-luokan instanssin sen edelliseen tilaan. Toimintoa voidaan käyttää ihmispelaajien välisen ottelun lisäksi syvyyssuuntaisen haun suorittamiseen pelin ongelma-avaruudessa. Sitä käytetään myös muualla ohjelmalogiikassa silloin, kun laillisten siirtojen laskemiseen tarvitaan tietoa mahdollisista tulevista siirroista (esim. shakki-tilanteen ratkaiseminen).
+
+Game-luokan julkiset metodit ovat suunniteltu antamaan vastaus johonkin mielekkääseen kysymykseen, kuten "mikä nappula on tässä ruudussa?", "mitkä ovat tämän nappulan lailliset siirrot?" tai "mitkä nappulat voivat siirtyä tähän ruutuun?". Pelin monimutkaisempien sääntöjen toteutus perustuu pitkälti näiden kyselyiden käyttöön. Osa kyselyistä on yhdistetty suoraan GUI:hinkohdassa "Query mode".

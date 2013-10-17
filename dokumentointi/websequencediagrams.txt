@@ -12,6 +12,32 @@ logic.Game->logic.Piece: change position
 logic.Game->logic.Game: check victory conditions
 logic.Game-->GUI.Board: return true
 
+title Querying which piece can move to a square
+
+user->GUI.Window: press "Query Mode ON"
+user->GUI.VSquare: select a square
+GUI.VSquare->GUI.Board: query square
+alt if square is occupied
+GUI.Board->GUI.VSquare: get Piece in square
+GUI.VSquare-->GUI.Board: return Piece
+GUI.Board->logic.Piece: possibleMoves(Piece)
+logic.Piece-->GUI.Board: return moves
+GUI.Board->GUI.VSquare: highlight VSquares
+else if square is empty
+GUI.Board->logic.Game: whoCanMoveTo(square)
+logic.Game-->GUI.Board: return pieces
+GUI.Board->GUI.VSquare: highlight queried square
+GUI.Board->GUI.VSquare: highlight squares\n containing candidate pieces
+end
+user->GUI.Window: press "Query Mode OFF"
+
+title Undoing a move
+
+user->GUI.Window: press Undo
+GUI.Window->logic.Game: undo()
+logic.Game->logic.Game: if pastStates-stack\n is not empty
+logic.Game->logic.Game: poll previous state
+logic.Game->logic.Game: set state of logic.Game\n to previous state
 
 title Saving a game
 

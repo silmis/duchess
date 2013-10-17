@@ -46,7 +46,6 @@ public class MRookTest {
     
     @Test
     // defeats the purpose of testing, but checked this manually to be true
-    // (writing a function for this is simply too time consuming)
     public void EmptyBoardListAllMoves() {
         gm = new Game(0); // no other pieces
         Square target = new Square(4,5);
@@ -79,25 +78,5 @@ public class MRookTest {
         boolean isEmpty = (moves.length == 0);
         assertEquals(isEmpty, true);
     }
-    /*@Test
-    public void bishopsOpenCorrect() {
-        gm = new Game();
-        boolean w1 = gm.move(gm.whoIsAt(new Square(4,2)), new Square(4,3));
-        boolean b1 = gm.move(gm.whoIsAt(new Square(4,7)), new Square(4,5));
-        boolean w2 = gm.move(gm.whoIsAt(new Square(3,1)), new Square(6,4));
-        boolean b2 = gm.move(gm.whoIsAt(new Square(3,8)), new Square(7,4));
-        assertEquals((w1 && b1 && w2 && b2), true);
-    }
-    @Test
-    public void bishopsOpenIncorrect() {
-        // both players try illegal move
-        gm = new Game();
-        boolean w1 = gm.move(gm.whoIsAt(new Square(4,2)), new Square(4,3));
-        boolean b1 = gm.move(gm.whoIsAt(new Square(4,7)), new Square(4,5));
-        boolean w2 = gm.move(gm.whoIsAt(new Square(3,1)), new Square(5,4));
-        boolean w2again = gm.move(gm.whoIsAt(new Square(3,1)), new Square(6,4));
-        boolean b2 = gm.move(gm.whoIsAt(new Square(3,8)), new Square(8,4));
-        boolean b2again = gm.move(gm.whoIsAt(new Square(3,8)), new Square(7,4));
-        assertEquals((w2 && b2), false);
-    }*/
+   
 }

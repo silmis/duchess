@@ -58,16 +58,8 @@ public class GamesTest {
         
         // queen checks
         boolean b5 = gm.move(gm.whoIsAt(new Square(4,8)), new Square(1,5));
-        
-        // king's should be able to move ..
-        Square[] ss = gm.whoIsAt(new Square(5,1)).possibleMoves();
-        for (Square s : ss) {
-                System.out.println(s);
-        }
-        
-        System.out.println("Is it check? " + gm.isCheck());
-        assertEquals(w1 && b1 && w2 && b2 && w3 && b3 && w4 && b4 &&
-                     w5 && b5, true);
+
+        assertEquals(gm.isCheck(), true);
     }
    
     

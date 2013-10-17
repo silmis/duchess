@@ -23,7 +23,7 @@
  * DONE check & mate:
  *      DONE - game is check if opponent moves a piece and in the new position king is threatened
  * make illegal: player moves and exposes one's king to a threat by opponent
- * games can be drawn:
+ * DONE games can be drawn:
     "Draws are codified by various rules of chess including stalemate 
     (when the player to move has no legal move and is not in check), 
     threefold repetition (when the same position occurs three times with the 
@@ -42,7 +42,7 @@
  *      - if pawn moves FROM rank 7 or 2 TWO steps AND opponent in file+-1 
  *        and rank 5 or 4, in the next turn opponent has a special legal move...
  *        (separate for black and white)
- * special moves: castling
+ * DONE special moves: castling
  *      - if rank 1 or 8 (from king to either rook) is NOT threatened 
  *        OR occupied AND rook (on that side) and king have NOT previously 
  *        moved king has a special legal move to file 7 or 3 (2 steps).

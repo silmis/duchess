@@ -12,6 +12,13 @@ logic.Game->logic.Piece: change position
 logic.Game->logic.Game: check victory conditions
 logic.Game-->GUI.Board: return true
 
+title Undoing a move
+
+user->GUI.Window: press Undo
+GUI.Window->logic.Game: undo()
+logic.Game->logic.Game: if pastStates-stack\n is not empty
+logic.Game->logic.Game: poll previous state
+logic.Game->logic.Game: set state of logic.Game\n to previous state
 
 title Saving a game
 
@@ -20,6 +27,15 @@ GUI.MainWindow->logic.SaveManager: request save
 logic.SaveManager->logic.Logkeeper: request GameState
 logic.Logkeeper->+logic.Game.GameState: new GameState()
 logic.Game.GameState-->logic.SaveManager: GameState object
-logic.SaveManager->logic.SaveManager: write file to disk \non predetermined location
+logic.SaveManager->logic.SaveManager: write file to disk, \nprompt user for location
+
+title Loading a game
+
+user->GUI.MainWindow: press "load"
+GUI.MainWindow->logic.SaveManager: request savegame
+logic.SaveManager->logic.SaveManager: read file from disk, \nprompt user for location
+logic.SaveManager-->GUI.MainWindow: return GameState object
+GUI.MainWindow->+logic.Game: instantiate a new game with state GameState
+
 
 

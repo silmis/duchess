@@ -1,0 +1,10 @@
+Shakkipeli Duchess: Käyttöohje
+==============================
+Shakki on peli, jossa yritetään saada vastustajan kuningas mattiin eli tilanteeseen, jossa se joutuisi välttämättä syödyksi seuraavalla siirrolla.
+
+Pelin käynnistetään komentoriviltä komennolla 
+java -jar dist/duchess.jar
+
+Pelin käyttöliittymänä on representaatio shakkilaudasta, jolla nappuloita liikutellaan klikkaamalla ensin haluttua nappulaa ja sen jälkeen ruutua, johon se halutaan siirtää. Duchess näyttää valitsemasi nappulan lailliset siirrot merkitsemällä niitä vastaavat ruudut sinisellä reunuksella. "Query mode" on tila, jossa nappuloita ei siirretä, vaan niiden mahdollisia siirtoja voidaan kysyä haluttua nappulaa klikkaamalla. Mikäli klikataan ruutua, jossa nappulaa ei ole, Duchess näyttää kaikki nappulat, jotka voivat kyseisellä vuorolla siirtyä siihen. Duchess näyttää lailliset siirrot / ruutuun mahdollisesti liikkuvat nappulat ainoastaan sen pelaajan nappuloista, jonka vuoro on kyseessä.
+
+Duchessia voidaan käyttää myös toisen java-ohjelman osana. Tällöin voidaan tuoda omaan koodiin Game ja Piece-luokat ja luomalla uusi Game-instanssi saadaan perinteinen alkuasetelma. Luokassa on metodit nappuloiden liikuttamiseen, laudan tilanteen esittämiseen ja erilaisten kyselyiden tekemiseen. (Ks. Javadoc)

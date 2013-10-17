@@ -4,6 +4,10 @@ import java.util.ArrayDeque;
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
+/**
+ * Core class for a game.
+ * @author thitkone
+ */
 public class Game {
     private boolean isCheck;
     private boolean resolveCheckGuard;
@@ -27,7 +31,7 @@ public class Game {
         this.pastStates = new ArrayDeque();
         this.positionPieces();
     }
-    // empty board for testing
+    // empty board for tests only
     public Game(int any) {
         this.isCheck = false;
         this.resolveCheckGuard = true;
@@ -37,6 +41,7 @@ public class Game {
         this.pieces = new ArrayList(32);
         this.lastMovedPiece = null;
         this.log = new Logkeeper();
+        this.pastStates = new ArrayDeque();
     }
     
     public ArrayList<Piece> getPieces() { return this.pieces; }
@@ -101,7 +106,9 @@ public class Game {
             this.isCheck = false;
         }
     }
-   
+    /**
+     * Last things to execute when the game has ended.
+     */
     private void gameOver() {
         if (this.isCheck && this.isMate) {
             String winner = this.lastMovedPiece.getColor() ? 
@@ -111,10 +118,17 @@ public class Game {
             System.out.println("Game over, it's a draw!");
         }
     }
+    /**
+     * Saves the current state of the game to the past states -stack.
+     */
     private void takeSnapshot() {
         this.pastStates.addFirst(new GameState());
     }
-    public boolean areVictoryConditionsMet() {
+    /**
+     * Returns true if the game has ended (either by win or draw).
+     * @return true/false
+     */
+    public boolean areEndConditionsMet() {
         boolean end = true;
         if (this.isCheck == true) {
             for (Piece p : this.pieces) {
@@ -132,12 +146,22 @@ public class Game {
         }
         return end;
     }
-    public void undo() {
+    /**
+     * Reverts one step back in the past states -stack.
+     * @return success
+     */
+    public boolean undo() {
         if (this.pastStates.peek() != null) {
             System.out.println("undo");
             this.setState(this.pastStates.poll());
+            return true;
         }
+        return false;
     }
+    /**
+     * Sets the state of the game.
+     * @param gs State to revert to.
+     */
     private void setState(GameState gs) {
         this.isCheck = gs.isCheck;
         this.resolveCheckGuard = gs.resolveCheckGuard;
@@ -151,7 +175,7 @@ public class Game {
     /**
      * Promotes a pawn if on the right rank at the opposing side.
      * @param p Pawn to promote
-     * @return Queen piece
+     * @return New piece (Queen)
      */
     private Piece promotePawn(Piece p) {
         if (!(p instanceof Pawn)) return p;
@@ -258,7 +282,7 @@ public class Game {
      * @param p Piece
      * @param square Square to move to.
      * @return Returns false if piece is null or piece has no possible moves.
-     * Otherwise returns true.
+     * On success returns true.
      */
     public boolean move(Piece p, Square square) {
         if (p == null) return false;
@@ -266,6 +290,12 @@ public class Game {
         p = this.refreshPieceReference(p);
         for(Square move : possibleMoves) {
             if (square.equals(move)) {
+                // castling
+                if ((p instanceof King) && 
+                        Math.abs(p.getFile()-square.fl()) > 1) {
+                    boolean success = this.castlingMove(p, move);
+                    return success;
+                }
                 this.takeSnapshot();
                 Piece toBeCaptured = this.whoIsAt(move); 
                 if (toBeCaptured != null) {
@@ -277,6 +307,7 @@ public class Game {
                 this.lastMovedPiece = p;
                 this.updateCheck();
                 
+                // en passant
                 Piece enPassant = this.updateEnPassant();
                 if (enPassant == p) {
                     int colorMod = p.getColor() ? 1 : -1;
@@ -287,10 +318,8 @@ public class Game {
                 }
                     
                 this.changeTurn();
-                boolean gameEnded = this.areVictoryConditionsMet();
+                boolean gameEnded = this.areEndConditionsMet();
                 if (gameEnded==true) gameOver();
-                Square prevSq = this.log.lastMove().getStart();
-                System.out.println("Move " + this.lastMovedPiece.getClass()+ " " + prevSq + "->" +move);
                 return true;
             }
         }
@@ -298,6 +327,25 @@ public class Game {
     }
     public boolean move(int pieceIndex, Square square) {
         return this.move(this.pieces.get(pieceIndex), square);
+    }
+    private boolean castlingMove(Piece p, Square move) {
+        this.takeSnapshot();
+        this.log.add(p, p.getSquare(), move);
+        int kingsFile = p.getFile();
+        int direction = (move.fl()>kingsFile) ? 1 : -1;
+        p.changePos(move.fl(), move.rk());
+        for (Piece k : this.pieces) {
+            if ((k instanceof Rook) && (k.getColor() == p.getColor())) {
+                int kDirection = (k.getFile()>kingsFile) ? 1 : -1;
+                if (direction == kDirection) {
+                    k.changePos(move.fl() - direction, move.rk());
+                }
+            }
+        }
+        this.lastMovedPiece = p;
+        this.changeTurn();
+        return true;
+        
     }
     /**
      * Gets the current reference to piece based on ID.
@@ -307,7 +355,7 @@ public class Game {
     public Piece refreshPieceReference(Piece p) {
         if (p == null) return null;
         int ID = p.pieceID;
-        return this.hasID(ID);
+        return this.pieceHasID(ID);
     }
     /**
      * Return the piece occupying a Square.
@@ -365,7 +413,12 @@ public class Game {
     public Piece[] whoCanMoveHere(Square s) {
         return whoCanMoveHere(s, false, false);
     }
-    public Piece hasID(int i) {
+    /**
+     * Returns the piece corresponding to a pieceID.
+     * @param i pieceID
+     * @return piece or null
+     */
+    public Piece pieceHasID(int i) {
         Piece result = null;
         for (Piece p : this.pieces) {
             if (p.pieceID == i) result = p;

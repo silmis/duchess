@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import duchess.logic.Square;
 import duchess.logic.Piece;
 import duchess.logic.Game;
+import duchess.logic.Logkeeper.Move;
 
 /**
  *
@@ -41,7 +42,7 @@ public class Board extends JComponent {
     public Piece getSelectedPiece() { return this.selectedForMovement; }
     
     /**
-     * Highlights squares on the board. If the square is occupied, it shows
+     * Queries squares on the board. If the square is occupied, it shows
      * possible moves. If not, it shows who can move there.
      * @param vsq VSquare
      */
@@ -49,7 +50,7 @@ public class Board extends JComponent {
         this.clearHighlight();
         if (vsq.getPiece() != null) {
                 Square[] moves = vsq.getPiece().possibleMoves();
-                this.highlight(moves, new Color(255,255,255));
+                this.highlight(moves, new Color(0,0,255));
         } else {
             Piece[] pieces = game.whoCanMoveHere(vsq.getSquare());
             ArrayList<Square> sqs = new ArrayList();
@@ -61,6 +62,11 @@ public class Board extends JComponent {
             this.highlight(new Square[] {vsq.getSquare()}, new Color(255,0,0));
         }
     }
+    /**
+     * GUI equivalent to move() in logic. Decides what do after each click
+     * sequence.
+     * @param vsq VSquare clicked.
+     */
     public void movePiece(VSquare vsq) {
         Piece previous = this.getSelectedPiece();
         previous = game.refreshPieceReference(previous);
@@ -84,28 +90,31 @@ public class Board extends JComponent {
             VSquare prevSq = (VSquare) this.getComponent(
                     previous.getSquare().toIndex());
             
-            boolean success = 
-                    game.move(previous, vsq.getSquare());
+            boolean success = game.move(previous, vsq.getSquare());
             if (success == true) {
                 this.updatePiecePositions();
                 this.unSelectPiece();
-                if (game.areVictoryConditionsMet()) {
+                if (game.areEndConditionsMet()) {
                     this.victory();
                 }
+                Window w = (Window)this.getTopLevelAncestor();
+                w.updateScoreBox();
             } else {
                  this.unSelectPiece();
                  this.clearHighlight();
             }
         }
     }
+    /**
+     * Updates the positions of the pieces on the screen after a change
+     * in the logic classes.
+     */
     public void updatePiecePositions() {
         this.clearHighlight();
         Component[] vsqs = this.getComponents();
         for (Component vsq : vsqs) {
             ((VSquare)vsq).unSetPiece();
         }
-        // index of Board.getComponents() corresponds 
-        // to Square.toIndex()
         for (Piece p : this.game.getPieces()) {
             Square sq = p.getSquare();
             int position = sq.toIndex();
@@ -114,6 +123,11 @@ public class Board extends JComponent {
             
         }
     }
+    /**
+     * Highlights squares on the board.
+     * @param moves squares to be highlighted
+     * @param c color to highlight with
+     */
     public void highlight(Square[] moves, Color c) {
         for (Square sq : moves) {
             int i = sq.toIndex();
@@ -130,6 +144,9 @@ public class Board extends JComponent {
             vsq.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.black));
         }
     }
+    /**
+     * Called when logic has determined that the game has ended.
+     */
     private void victory() {
         if (game.isMate()) {
             String winner = !(game.isWhitesTurn()) ? 
