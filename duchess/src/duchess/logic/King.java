@@ -46,7 +46,8 @@ public class King extends Piece {
                     int distance = Math.abs(rook.getFile()-this.getFile());
                     int direction = (rook.getFile()>this.getFile()) ? 1 : -1;
                     for (int i=1; i<distance; i++) {
-                        Square sq = new Square(this.file + i * direction, this.rank);
+                        Square sq = new Square(this.file + i * direction, 
+                                this.rank);
                         Piece occupier = myGame.whoIsAt(sq);
                         if (occupier != null) continue rooks;
                         Piece[] threats = myGame.whoCanMoveHere(sq, true, true);

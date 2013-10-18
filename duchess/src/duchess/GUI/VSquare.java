@@ -39,7 +39,12 @@ public class VSquare extends JPanel implements MouseListener {
         this.add(label);
     }
     public Square getSquare() { return this.sq; }
-    public Piece getPiece() { return this.piece; }
+    public Piece getPiece() { 
+        Window w = (Window) this.getTopLevelAncestor();
+        Game gm = w.getGame();
+        Piece ps = gm.refreshPieceReference(this.piece);
+        return ps; 
+    }
     
     public void setPiece(Piece p) {
         this.piece = p;

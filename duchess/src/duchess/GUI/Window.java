@@ -65,6 +65,7 @@ public class Window extends JFrame {
                     boolean success = game.undo();
                     if (!success) { break; }
                     board.updatePiecePositions();
+                    updateScoreBox();
                 }
             }
         });

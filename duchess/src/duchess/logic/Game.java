@@ -328,6 +328,13 @@ public class Game {
     public boolean move(int pieceIndex, Square square) {
         return this.move(this.pieces.get(pieceIndex), square);
     }
+    /**
+     * Makes a castling move. As castling is the only move which involves
+     * two pieces, it needs it's own method to be executed.
+     * @param p Piece to move
+     * @param move Square to move to
+     * @return true for success (when called from move() it can not fail)
+     */
     private boolean castlingMove(Piece p, Square move) {
         this.takeSnapshot();
         this.log.add(p, p.getSquare(), move);
@@ -344,8 +351,7 @@ public class Game {
         }
         this.lastMovedPiece = p;
         this.changeTurn();
-        return true;
-        
+        return true;   
     }
     /**
      * Gets the current reference to piece based on ID.
@@ -387,7 +393,11 @@ public class Game {
         if (opponent==true) { this.changeTurn(); }
         
         ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
-        
+        Iterator<Piece> onlyMyPieces = piecesCopy.iterator();
+        while(onlyMyPieces.hasNext()) {
+            Piece p = onlyMyPieces.next();
+            if (p.getColor() != this.isWhitesTurn()) onlyMyPieces.remove();
+        }
         if (excludeKings == true) {
             Iterator<Piece> iter = piecesCopy.iterator();
             while(iter.hasNext()) {

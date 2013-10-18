@@ -67,3 +67,4 @@ king can't escape check to a to-be threatened square
 game should draw when x moves repeat
 king can move to a square threatened by a pawn: pawn's diagonal moves are 
     not counted unless there is a piece in them
+something's wrong with checking+blocking the check (an extra undo)
