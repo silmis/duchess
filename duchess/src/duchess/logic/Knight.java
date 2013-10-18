@@ -7,7 +7,7 @@ package duchess.logic;
 import java.util.ArrayList;
 
 /**
- *
+ * Class for Knights.
  * @author thitkone
  */
 public class Knight extends Piece {
@@ -45,9 +45,9 @@ public class Knight extends Piece {
             }
         }
         
-        /*if (myGame.nextMoveCheckGuard()) {
+        /*if (myGame.nextMoveCheckGuard() && !myGame.isCheck()) {
             myGame.setNextMoveCheckGuard(false);
-            moves = this.willResultInCheck(moves);
+            moves = this.willNotResultInCheck(moves);
             myGame.setNextMoveCheckGuard(true);
         }*/
         if (myGame.isCheck() && myGame.resolveCheckGuard() &&

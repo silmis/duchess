@@ -11,7 +11,7 @@ import duchess.logic.*;
 import java.util.ArrayList;
 
 /**
- * GUI counterpart of duchess.logic.Square
+ * GUI counterpart for duchess.logic.Square
  * @author thitkone
  */
 public class VSquare extends JPanel implements MouseListener {

@@ -6,7 +6,7 @@ package duchess.logic;
 import java.util.ArrayList;
 
 /**
- *
+ * Class for Pawns.
  * @author thitkone
  */
 public class Pawn extends Piece {
@@ -87,12 +87,13 @@ public class Pawn extends Piece {
                 moves.add(s);
             }   
         }
-        if (this.enPassant != null) moves.add(enPassant);
-        /*if (myGame.nextMoveCheckGuard()) {
+        
+        /*if (myGame.nextMoveCheckGuard() && !myGame.isCheck()) {
             myGame.setNextMoveCheckGuard(false);
-            moves = this.willResultInCheck(moves);
+            moves = this.willNotResultInCheck(moves);
             myGame.setNextMoveCheckGuard(true);
         }*/
+        if (this.enPassant != null) moves.add(enPassant);
         if (myGame.isCheck() && myGame.resolveCheckGuard() &&
                 (this.color == myGame.isWhitesTurn())) {
             myGame.setResolveCheckGuard(false);

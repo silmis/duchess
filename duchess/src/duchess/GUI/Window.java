@@ -13,7 +13,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 /**
- *
+ * Main GUI window.
  * @author thitkone
  */
 public class Window extends JFrame {

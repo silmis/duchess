@@ -5,7 +5,7 @@
 package duchess.logic;
 import java.util.ArrayList;
 /**
- *
+ * Class for Queens.
  * @author thitkone
  */
 public class Queen extends Piece {
@@ -21,9 +21,9 @@ public class Queen extends Piece {
         ArrayList<Square> orthogonal = this.findOrthogonalSquares(8);
         ArrayList<Square> moves = new ArrayList<Square>(diagonal);
         moves.addAll(orthogonal);
-        /*if (myGame.nextMoveCheckGuard()) {
+        /*if (myGame.nextMoveCheckGuard() && !myGame.isCheck()) {
             myGame.setNextMoveCheckGuard(false);
-            moves = this.willResultInCheck(moves);
+            moves = this.willNotResultInCheck(moves);
             myGame.setNextMoveCheckGuard(true);
         }*/
         if (myGame.isCheck() && myGame.resolveCheckGuard() &&

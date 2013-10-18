@@ -6,7 +6,8 @@ package duchess.logic;
 import java.util.ArrayList;
 import java.util.Iterator;
 /**
- *
+ * Abstract class to represent all piece types in the game. Contains
+ * all of the shared functionality for the pieces.
  * @author thitkone
  */
 public abstract class Piece {
@@ -28,10 +29,11 @@ public abstract class Piece {
     public int getFile() { return this.file; }
     public int getRank() { return this.rank; }
     public Square getSquare() { return new Square(this.file, this.rank); }
+    public Square[] possibleMoves() { return null; }
     
     /**
      * Changes the pieces position. Does not guarantee legality of move, 
-     * use move() to play!
+     * use Game.move() to play!
      * @param file
      * @param rank 
      */
@@ -39,9 +41,10 @@ public abstract class Piece {
         this.file = file;
         this.rank = rank;    
     }
-
-    public Square[] possibleMoves() { return null; }
-    
+    /**
+     * Returns true if the piece belongs to the player who's turn it is.
+     * @return true or false
+     */
     protected boolean isItMyTurn() {
         if( (myGame.isWhitesTurn() == this.color)) {
             return true;
@@ -49,7 +52,7 @@ public abstract class Piece {
         return false;
     }
     /**
-     * Finds all legal diagonal or orthogonal moves (Bishop, Rook, 
+     * Finds all diagonal or orthogonal moves (Bishop, Rook, 
      * Queen & King). Modifiers is an array of four (x,y) pairs of "weights" 
      * which enable the same loop to be run for all four directions 
      * on the board. By choosing the modifiers accordingly, we get 
@@ -86,7 +89,7 @@ public abstract class Piece {
         return moves;
     }
     /**
-     * Finds the diagonally aligned legal squares.
+     * Finds all diagonally aligned squares.
      * @param length depth of exploration in squares 
      * @return see findConsecutiveSquares()
      */
@@ -95,7 +98,7 @@ public abstract class Piece {
         return this.findConsecutiveSquares(modifiers, length);
     }
 /**
-     * Finds the orthogonally aligned legal squares.
+     * Finds all orthogonally aligned squares.
      * @param length depth of exploration in squares 
      * @return see findConsecutiveSquares()
      */
@@ -135,11 +138,13 @@ public abstract class Piece {
             myGame.changeTurn();
             Square[] enemyMoves = myGame.lastMovedPiece().possibleMoves();
             myGame.changeTurn();
-             
+            Piece thisPiece = this;
+            
             for (Square enemyMove : enemyMoves) {
                 if (myMove.equals(enemyMove)) {
                     Piece pieceGivingCheck = myGame.lastMovedPiece();
-                    myGame.move(this, myMove);
+                    thisPiece = myGame.refreshPieceReference(thisPiece);
+                    myGame.move(thisPiece, myMove);
                     Square[] tentative = pieceGivingCheck.possibleMoves();
                     myGame.undo();
                     boolean squareResolvesCheck = true;
@@ -168,9 +173,11 @@ public abstract class Piece {
     protected ArrayList<Square> willNotResultInCheck(ArrayList <Square> moves) {
         Iterator<Square> iter = moves.iterator();
         Square kingSquare = this.kingSquare();
+        Piece thisPiece = this;
         while(iter.hasNext()) {
             Square sq = iter.next();
-            boolean success = myGame.move(this, sq);
+            thisPiece = myGame.refreshPieceReference(thisPiece);
+            boolean success = myGame.move(thisPiece, sq);
             if (success) {
                 Piece[] enemies = myGame.whoCanMoveHere(kingSquare, false, true);
                 myGame.undo();

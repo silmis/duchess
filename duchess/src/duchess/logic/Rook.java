@@ -7,7 +7,7 @@ package duchess.logic;
 import java.util.ArrayList;
 
 /**
- *
+ * Class for Rooks.
  * @author thitkone
  */
 public class Rook extends Piece {
@@ -20,9 +20,9 @@ public class Rook extends Piece {
     public Square[] possibleMoves() {
         if(isItMyTurn() == false) return new Square[0];
         ArrayList<Square> moves = this.findOrthogonalSquares(8);
-        /*if (myGame.nextMoveCheckGuard()) {
+        /*if (myGame.nextMoveCheckGuard() && !myGame.isCheck()) {
             myGame.setNextMoveCheckGuard(false);
-            moves = this.willResultInCheck(moves);
+            moves = this.willNotResultInCheck(moves);
             myGame.setNextMoveCheckGuard(true);
         }*/
         if (myGame.isCheck() && myGame.resolveCheckGuard() &&

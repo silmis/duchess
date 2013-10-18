@@ -99,8 +99,8 @@ public class Game {
                 kingSquare = p.getSquare();
             } 
         }
-        Piece[] temp = this.whoCanMoveHere(kingSquare);
-        if (this.whoCanMoveHere(kingSquare).length > 0) {
+        Piece[] temp = this.whoCanMoveHere(kingSquare, false, true);
+        if (this.whoCanMoveHere(kingSquare, false, true).length > 0) {
             this.isCheck = true;
         } else {
             this.isCheck = false;
@@ -297,9 +297,7 @@ public class Game {
                 }
                 this.takeSnapshot();
                 Piece toBeCaptured = this.whoIsAt(move); 
-                if (toBeCaptured != null) {
-                    pieces.remove(toBeCaptured);
-                }
+                if (toBeCaptured != null) pieces.remove(toBeCaptured);
                 this.log.add(p, p.getSquare(), move);
                 p.changePos(move.fl(), move.rk());
                 p = this.promotePawn(p);
@@ -355,7 +353,7 @@ public class Game {
      * Select all pieces of current players color.
      * @return ArrayList<Piece>
      */
-    private ArrayList<Piece> onlyMyPieces() {
+    private ArrayList<Piece> getMyPieces() {
         ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
         Iterator<Piece> onlyMyPieces = piecesCopy.iterator();
         while(onlyMyPieces.hasNext()) {
@@ -403,7 +401,7 @@ public class Game {
         
         if (opponent==true) { this.changeTurn(); }
         
-        ArrayList<Piece> piecesCopy = this.onlyMyPieces();
+        ArrayList<Piece> piecesCopy = this.getMyPieces();
         if (excludeKings == true) {
             Iterator<Piece> kiter = piecesCopy.iterator();
             while(kiter.hasNext()) {
@@ -426,9 +424,6 @@ public class Game {
         Piece[] result = list.toArray(new Piece[list.size()]);
         return result;
     }
-    public Piece[] whoCanMoveHere(Square s) {
-        return whoCanMoveHere(s, false, false);
-    }
     /**
      * Returns pieces of specified type who can move to square.
      * @param className class name of the piece in question
@@ -447,7 +442,7 @@ public class Game {
         } catch (ClassNotFoundException e) {
             return new Piece[0];
         }
-        ArrayList<Piece> piecesCopy = this.onlyMyPieces();
+        ArrayList<Piece> piecesCopy = this.getMyPieces();
         for (Piece p : this.pieces) {
             if (pcls.isInstance(p) && !(caller.getClass().isInstance(p))) {
                 Square[] moves = p.possibleMoves();

@@ -98,7 +98,7 @@ public class NewGameTest {
     }
     @Test
     public void whoCanMoveToC3() {
-        Piece[] pieces = gm.whoCanMoveHere(new Square(3,3));
+        Piece[] pieces = gm.whoCanMoveHere(new Square(3,3), false, false);
         for (Piece p : pieces) {
             //System.out.println(p);
         }

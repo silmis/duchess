@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *
+ * Class for Kings.
  * @author thitkone
  */
 public class King extends Piece {
@@ -62,6 +62,38 @@ public class King extends Piece {
                 }
             }
         }
+        // moves when pawn is nearby
+        int direction = this.color ? 1 : -1;
+        ArrayList<Square> pawnBox = new ArrayList<Square>(8);
+        for (int i=1; i<3; i++) {
+            pawnBox.add(new Square(this.file-2, this.rank+i*direction));
+            pawnBox.add(new Square(this.file-1, this.rank+i*direction));
+            pawnBox.add(new Square(this.file, this.rank+i*direction));
+            pawnBox.add(new Square(this.file+1, this.rank+i*direction));
+            pawnBox.add(new Square(this.file+2, this.rank+i*direction));
+        }
+        for (Square sq : pawnBox) {
+            if (sq.isValid() == false) continue;
+            Piece pieceInSq = myGame.whoIsAt(sq);
+            if ((pieceInSq instanceof Pawn) && 
+                    (pieceInSq.getColor() != this.color)) {
+                ArrayList<Square> toRemove = new ArrayList<Square>();
+                toRemove.add(new Square(sq.fl()-1, sq.rk()-1*direction));
+                toRemove.add(new Square(sq.fl()+1, sq.rk()-1*direction));
+                Square legal = new Square(sq.fl(), sq.rk()-1*direction);
+                for (Square r : toRemove) {
+                    Iterator<Square> iter = moves.iterator();
+                    while(iter.hasNext()) {
+                        Square m = iter.next();
+                        if (r.equals(m)) iter.remove();
+                    }
+                }
+                if (myGame.whoIsAt(legal) == null) 
+                    moves.add(legal);
+            }
+        }
+        //System.out.println();
+        //System.out.println(moves);
         /*Iterator<Square> iter = moves.iterator();
         while(iter.hasNext()) {
             Square m = iter.next();

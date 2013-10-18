@@ -12,7 +12,7 @@ import duchess.logic.Game;
 import duchess.logic.Logkeeper.Move;
 
 /**
- *
+ * Represents the chessboard visually.
  * @author thitkone
  */
 public class Board extends JComponent {
@@ -52,7 +52,7 @@ public class Board extends JComponent {
                 Square[] moves = vsq.getPiece().possibleMoves();
                 this.highlight(moves, new Color(0,0,255));
         } else {
-            Piece[] pieces = game.whoCanMoveHere(vsq.getSquare());
+            Piece[] pieces = game.whoCanMoveHere(vsq.getSquare(), false, false);
             ArrayList<Square> sqs = new ArrayList();
             for (Piece p : pieces) {
                 sqs.add(p.getSquare());

@@ -56,8 +56,8 @@ public class GamesTest {
         
         boolean w5 = gm.move(gm.whoIsAt(new Square(4,2)), new Square(4,3));
         
-        // queen checks
-        boolean b5 = gm.move(gm.whoIsAt(new Square(4,8)), new Square(1,5));
+        // bishop checks
+        boolean b5 = gm.move(gm.whoIsAt(new Square(6,8)), new Square(2,4));
 
         assertEquals(gm.isCheck(), true);
     }

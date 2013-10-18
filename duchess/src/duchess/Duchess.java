@@ -7,7 +7,7 @@ import java.util.Arrays;
 import duchess.logic.*;
 import duchess.GUI.Window;
 /**
- *
+ * Entry point.
  * @author thitkone
  */
 public class Duchess {
