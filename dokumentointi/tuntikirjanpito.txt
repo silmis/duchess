@@ -31,3 +31,4 @@
 15.10. 5h ohestalyönti ja nappuloiden korottaminen toimii
 16.10. 5h toistaiseksi tuloksetonta taistelua erilaisten laittomien siirtojen kanssa, tasapeli lisätty
 17.10. 6h kaikki oheiskamat lisätty palautusta varten. tornittaminen toimii. bugien korjausta.
+18.10. 4h bugien jahtaamista, testaamista, javadokkien ym viilausta
