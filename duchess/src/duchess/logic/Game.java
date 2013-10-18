@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
+import duchess.logic.Logkeeper.Move;
 
 /**
  * Core class for a game.
@@ -31,7 +32,7 @@ public class Game {
         this.pastStates = new ArrayDeque();
         this.positionPieces();
     }
-    // empty board for tests only
+    // empty board for tests
     public Game(int any) {
         this.isCheck = false;
         this.resolveCheckGuard = true;
@@ -88,7 +89,7 @@ public class Game {
         this.addPiece("King", 32, new Square(5,8), false);
     }
     /**
-     * Check if opponent is in check
+     * See if opponent is in check
      */
     private void updateCheck() {
         Square kingSquare = null;
@@ -101,13 +102,12 @@ public class Game {
         Piece[] temp = this.whoCanMoveHere(kingSquare);
         if (this.whoCanMoveHere(kingSquare).length > 0) {
             this.isCheck = true;
-            System.out.println("Game checked");
         } else {
             this.isCheck = false;
         }
     }
     /**
-     * Last things to execute when the game has ended.
+     * Things to execute when the game has ended.
      */
     private void gameOver() {
         if (this.isCheck && this.isMate) {
@@ -152,7 +152,6 @@ public class Game {
      */
     public boolean undo() {
         if (this.pastStates.peek() != null) {
-            System.out.println("undo");
             this.setState(this.pastStates.poll());
             return true;
         }
@@ -329,8 +328,7 @@ public class Game {
         return this.move(this.pieces.get(pieceIndex), square);
     }
     /**
-     * Makes a castling move. As castling is the only move which involves
-     * two pieces, it needs it's own method to be executed.
+     * Makes a castling move.
      * @param p Piece to move
      * @param move Square to move to
      * @return true for success (when called from move() it can not fail)
@@ -352,6 +350,19 @@ public class Game {
         this.lastMovedPiece = p;
         this.changeTurn();
         return true;   
+    }
+    /**
+     * Select all pieces of current players color.
+     * @return ArrayList<Piece>
+     */
+    private ArrayList<Piece> onlyMyPieces() {
+        ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
+        Iterator<Piece> onlyMyPieces = piecesCopy.iterator();
+        while(onlyMyPieces.hasNext()) {
+            Piece p = onlyMyPieces.next();
+            if (p.getColor() != this.isWhitesTurn()) onlyMyPieces.remove();
+        }
+        return piecesCopy;
     }
     /**
      * Gets the current reference to piece based on ID.
@@ -392,17 +403,12 @@ public class Game {
         
         if (opponent==true) { this.changeTurn(); }
         
-        ArrayList<Piece> piecesCopy = (ArrayList<Piece>) this.pieces.clone();
-        Iterator<Piece> onlyMyPieces = piecesCopy.iterator();
-        while(onlyMyPieces.hasNext()) {
-            Piece p = onlyMyPieces.next();
-            if (p.getColor() != this.isWhitesTurn()) onlyMyPieces.remove();
-        }
+        ArrayList<Piece> piecesCopy = this.onlyMyPieces();
         if (excludeKings == true) {
-            Iterator<Piece> iter = piecesCopy.iterator();
-            while(iter.hasNext()) {
-                Piece p = iter.next();
-                if (p instanceof King) iter.remove();
+            Iterator<Piece> kiter = piecesCopy.iterator();
+            while(kiter.hasNext()) {
+                Piece p = kiter.next();
+                if (p instanceof King) kiter.remove();
             }
         }
         ArrayList<Piece> list = new ArrayList();
@@ -422,6 +428,39 @@ public class Game {
     }
     public Piece[] whoCanMoveHere(Square s) {
         return whoCanMoveHere(s, false, false);
+    }
+    /**
+     * Returns pieces of specified type who can move to square.
+     * @param className class name of the piece in question
+     * @param opponent if true, return returns opponent's pieces
+     * @return 
+     */
+    public Piece[] canXsMoveHere(String className, Square sq, 
+            Piece caller, boolean opponent) {
+        
+        if (opponent==true) { this.changeTurn(); }
+        
+        ArrayList<Piece> list = new ArrayList();
+        Class pcls;
+        try {
+             pcls = Class.forName("duchess.logic." + className);
+        } catch (ClassNotFoundException e) {
+            return new Piece[0];
+        }
+        ArrayList<Piece> piecesCopy = this.onlyMyPieces();
+        for (Piece p : this.pieces) {
+            if (pcls.isInstance(p) && !(caller.getClass().isInstance(p))) {
+                Square[] moves = p.possibleMoves();
+                for (Square m : moves) {
+                    if (m.equals(sq)) list.add(p);
+                }
+            }
+        }
+        
+        if (opponent==true) { this.changeTurn(); }
+        
+        Piece[] result = list.toArray(new Piece[list.size()]);
+        return result;
     }
     /**
      * Returns the piece corresponding to a pieceID.

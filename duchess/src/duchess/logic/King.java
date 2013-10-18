@@ -5,6 +5,7 @@
 package duchess.logic;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -61,6 +62,12 @@ public class King extends Piece {
                 }
             }
         }
+        /*Iterator<Square> iter = moves.iterator();
+        while(iter.hasNext()) {
+            Square m = iter.next();
+            Piece[] pcs = myGame.canXsMoveHere("King", m, this, true);
+            if (pcs.length > 0) iter.remove();
+        }*/
         Square[] result = moves.toArray(new Square[moves.size()]);
         return result;
     }

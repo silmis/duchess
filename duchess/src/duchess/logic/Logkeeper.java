@@ -66,6 +66,7 @@ public class Logkeeper {
         }
         public Square getStart() { return this.start; }
         public Square getTarget() { return this.target; }
+        public boolean getColor() { return this.color; }
         public String toString() {
             String colorstr = color ? "white" : "black";
             return colorstr + " " + cls + " " + start + "->" + target;
